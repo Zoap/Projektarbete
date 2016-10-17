@@ -49,3 +49,19 @@ body
     height: 20px;
     width: 50px;
 }
+/* #####################
+    DESIGN Registration
+##################### */
+.registrationTableTop
+{
+	border-bottom: 1px solid;
+}
+.registrationTableText
+{
+	text-align: right;
+}
+.registrationFormButton
+{
+    height: 20px;
+    width: 50px;
+}

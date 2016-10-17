@@ -26,6 +26,13 @@ public partial class _Default : System.Web.UI.Page
 
     private void handleLogin(string username, string password)
     {
-        
+        if (sql.Login(username) == password)
+        {
+            Server.Transfer("LoggedIN.aspx", true);
+        }
+        else
+        {
+            Server.Transfer("Registration.aspx", true);
+        }
     }
 }
