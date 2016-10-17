@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>test</title>
-	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 <body>
 	<div id="Wrapper">
@@ -16,7 +16,7 @@
 			<form id="registrationForm" runat="server">
 			<table class="registrationTable">
 				<tr>
-					<td colspan="2" class="registrationTable">Registrera dig!</td>
+					<td colspan="2" class="registrationTableTop">Registrera dig!</td>
 				</tr>
                 <tr class="spacingFix"><td colspan="2"></td></tr>
 				<tr>
@@ -31,6 +31,12 @@
                         <asp:TextBox ID="registrationPassword" TextMode="password" runat="server"></asp:TextBox>
 					</td>
 				</tr>
+				<tr>
+					<td class="registrationTableText">Repetera</td>
+					<td>
+                        <asp:TextBox ID="registrationPasswordRepeat" TextMode="password" runat="server"></asp:TextBox>
+					</td>
+				</tr>
                 <tr>
                     <td colspan="2" align="right">
                         <asp:Button ID="btnRegistration" OnClick="btnRegistration_Click" runat="server" Text="Registrera" CssClass="registrationFormButton"/>
@@ -38,6 +44,7 @@
                 </tr>
 			</table>
 			</form>
+            <asp:Label ID="registrationError" runat="server" CssClass="registationErrorLabel" Visible="false"/>
 		</div>
 	</div>
 </body>

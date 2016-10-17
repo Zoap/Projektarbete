@@ -9,6 +9,6 @@ public partial class LoggedIN : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        //Session koll (den ska skapas vid inlogg)
     }
 }

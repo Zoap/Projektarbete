@@ -17,13 +17,36 @@ public partial class Registration : System.Web.UI.Page
 
     protected void btnRegistration_Click(object sender, EventArgs e)
     {
-        NameValueCollection formCollection = Request.Form;
-        string username = formCollection["registrationUsername"];
-        string password = formCollection["registrationPassword"];
+        bool regSuccess = false;
+        //NameValueCollection formCollection = Request.Form;
 
-        sql.Register(username, password);
+        //Det går att hämta asp: taggarna på sidan direkt!
+        string username = registrationUsername.Text;
+        string password = registrationPassword.Text;
+        string passwordRepeat = registrationPasswordRepeat.Text;
 
-        Server.Transfer("Default.aspx", true);
+        //Lite fenhantering (borde kollas efter specifika chars osv.) orkarde inte regex
+        if (username != "")
+            if (password == passwordRepeat && password != "")
+            {
+                regSuccess = sql.Register(username, password);
+                if (!regSuccess)
+                    registrationError.Text = "Något gick super fel :(";
+            }
+            else
+            {
+                registrationError.Text = "*Lösenordet måste matcha";
+                registrationError.Visible = true;
+            }
+        else
+        {
+            registrationError.Text = "*Användarnamnet är inte giltigt.";
+            registrationError.Visible = true;
+        }
+
+        if(regSuccess)
+            //Matar med en parameter till Default.aspx, RegSuccess = true
+            Server.Transfer("Default.aspx?RegSuccess=true", true);
     }
 
 

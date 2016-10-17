@@ -38,6 +38,7 @@
                 </tr>
 			</table>
 			</form>
+            <asp:Label ID="registrationSuccess" runat="server" CssClass="registrationSuccess" Visible="false"/>
 		</div>
 	</div>
 </body>

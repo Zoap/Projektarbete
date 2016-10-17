@@ -12,6 +12,15 @@
 		<div id="Header">
             <p>Logged IN!</p>
 		</div>
+        <div id="mainContent">
+            <div id="mainContentUpload">
+			    <p>För att ladda upp filer</p>
+                <!--Kommer beöva JavaScript för drag&drop-->
+            </div>
+            <div id="mainContentMyFiles">
+                <p>Upladdade filer</p>
+            </div>
+        </div>
 	</div>
 </body>
 </html>

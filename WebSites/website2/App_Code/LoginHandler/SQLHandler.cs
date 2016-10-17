@@ -9,7 +9,7 @@ using MySql.Data.MySqlClient;
 /// </summary>
 public class SQLHandler
 {
-    private MySqlConnection conn = new MySqlConnection(@"server=localhost;userid=root;password=rootpassword;database=projekt;");
+    private MySqlConnection conn = new MySqlConnection(@"server=localhost;userid=root;password=olle;database=projekt;");
 
     public SQLHandler()
     {
@@ -26,13 +26,6 @@ public class SQLHandler
         return text;
     }
 
-    private void addUser(string cmd)
-    {
-        conn.Open();
-        MySqlCommand query = new MySqlCommand(cmd, conn);
-        conn.Close();
-    }
-
     public string Login(string un)
     {
         string command = string.Format("SELECT password FROM login where username = '{0}'", un);
@@ -41,9 +34,22 @@ public class SQLHandler
         return text;
     }
 
-    public void Register(string un, string pw)
+    public bool Register(string un, string pw)
     {
-        string command = string.Format("INSERT INTO login(username, password) VALUES('{0}', '{1}')", un, pw);
-        addUser(command);
+        string command = string.Format("INSERT INTO login(Username, Password) VALUES('{0}', '{1}')", un, pw);
+        try
+        {
+            conn.Open();
+            MySqlCommand query = new MySqlCommand(command, conn);
+
+            //Behövde tydligen köra denna för att queryn skulle executas
+            query.ExecuteNonQuery();
+
+            conn.Close();
+            return true;
+        }
+        //Catch för debugg
+        catch(MySqlException err)
+        { return false; }
     }
 }
