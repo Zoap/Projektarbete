@@ -16,7 +16,7 @@ public partial class _Default : System.Web.UI.Page
         if (Request.QueryString["SessionActive"] == "false")
         {
             leftEventLabel.CssClass = "leftEventLabelFail";
-            leftEventLabel.Text = "Sessionen är utgången";
+            leftEventLabel.Text = "Sessionen är inte aktiv";
             leftEventLabel.Visible = true;
         }
     }
@@ -28,6 +28,16 @@ public partial class _Default : System.Web.UI.Page
         string password = loginPassword.Text;//formCollection["loginPassword"];
 
         handleLogin(username, password);
+        if (sql.Login(username) == password)
+        {
+            Server.Transfer("LoggedIN.aspx");
+        }
+        else
+        {
+            leftEventLabel.CssClass = "leftEventLabelFail";
+            leftEventLabel.Text = "*Felaktigt lösenord";
+            leftEventLabel.Visible = true;
+        }
     }
 
     private void handleLogin(string username, string password)
@@ -45,16 +55,16 @@ public partial class _Default : System.Web.UI.Page
     private bool checkUsername(string un)
     {
         bool check = true;
-        byte[] ASCIIValues = Encoding.ASCII.GetBytes(un);
-        for (int i = 0; i < ASCIIValues.Length;)
+
+        foreach (char x in un)
         {
-            if (!(ASCIIValues[i] <= 57 && ASCIIValues[i] >= 48) || !(ASCIIValues[i] <= 90 && ASCIIValues[i] >= 65) || !(ASCIIValues[i] <= 122 && ASCIIValues[i] >= 97))
+            if (!(x <= 122 && x >= 97) && !(x <= 90 && x >= 65) && !(x <= 57 && x >= 48))
             {
+                
                 check = false;
                 break;
             }
-            i++;
-    }
+        }
         return check;
     }
 
@@ -71,8 +81,6 @@ public partial class _Default : System.Web.UI.Page
         string password = registrationPassword.Text;
         string passwordRepeat = registrationPasswordRepeat.Text;
 
-
-
         //Lite felhantering (borde kollas efter specifika chars osv.) orkarde inte regex
         if (username != "")
         {
@@ -81,7 +89,7 @@ public partial class _Default : System.Web.UI.Page
                 rightEventLabel.Text = "*Användarnamnet får endast innehålla karaktärerna 0-9, A-Z, a-z";
                 rightEventLabel.Visible = true;
             }
-            else if (!sql.checkDuplicate(username))
+            else if (sql.checkDuplicate(username))
             {
                 rightEventLabel.Text = "*Användarnamnet är upptaget";
                 rightEventLabel.Visible = true;
@@ -107,9 +115,10 @@ public partial class _Default : System.Web.UI.Page
         if (regSuccess)
         {
             leftEventLabel.CssClass = "leftEventLabelSuccess";
-            leftEventLabel.Text = "Registration successfull!";
-            leftEventLabel.Visible = true;
-            rightEventLabel.Visible = false;
+            rightEventLabel.CssClass = "leftEventLabelSuccess";
+            rightEventLabel.Text = "Registration successfull!";
+            leftEventLabel.Visible = false;
+            rightEventLabel.Visible = true;
         }
 
     }

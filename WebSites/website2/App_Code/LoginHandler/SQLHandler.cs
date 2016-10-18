@@ -54,7 +54,7 @@ public class SQLHandler
 
     public bool Register(string un, string pw)
     {
-        string command = string.Format("INSERT INTO user(Username, Password) VALUES('{0}', '{1}')", un, pw);
+        string command = string.Format("INSERT INTO user(username, password) VALUES('{0}', '{1}')", un, pw);
         try
         {
             conn.Open();
