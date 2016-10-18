@@ -9,7 +9,7 @@ using MySql.Data.MySqlClient;
 /// </summary>
 public class SQLHandler
 {
-    private MySqlConnection conn = new MySqlConnection(@"server=localhost;userid=root;password=olle;database=projekt;");
+    private MySqlConnection conn = new MySqlConnection(@"server=localhost;userid=root;password=rootpassword;database=projekt;");
 
     public SQLHandler()
     {
@@ -28,15 +28,33 @@ public class SQLHandler
 
     public string Login(string un)
     {
-        string command = string.Format("SELECT password FROM login where username = '{0}'", un);
+        string command = string.Format("SELECT password FROM user where username = '{0}'", un);
         string text = getQueryResult(command);
 
         return text;
     }
 
+    public bool checkDuplicate(string un)
+    {
+        bool check;
+        string command = string.Format("SELECT username FROM user where username = '{0}'", un);
+        string text = getQueryResult(command);
+
+        if (un == text)
+        {
+            check = true;
+        }
+        else
+        {
+            check = false;
+        }
+
+        return check;
+    }
+
     public bool Register(string un, string pw)
     {
-        string command = string.Format("INSERT INTO login(Username, Password) VALUES('{0}', '{1}')", un, pw);
+        string command = string.Format("INSERT INTO user(username, password) VALUES('{0}', '{1}')", un, pw);
         try
         {
             conn.Open();
