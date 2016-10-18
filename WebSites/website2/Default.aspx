@@ -38,7 +38,7 @@
                             </td>
                         </tr>
 			        </table>
-                    <asp:Label ID="registrationSuccess" runat="server" CssClass="registrationSuccess" Visible="false"/>
+                    <asp:Label ID="leftEventLabel" runat="server" Visible="false"/>
                 </div>
 
                 <div id="loginContentRight">
@@ -71,7 +71,7 @@
                             </td>
                         </tr>
 			        </table>
-                    <asp:Label ID="registrationError" runat="server" CssClass="registationErrorLabel" Visible="false"/>
+                    <asp:Label ID="rightEventLabel" runat="server" CssClass="rightEventLabel" Visible="false"/>
                 </div>
 		    </form>
 		</div>

@@ -78,9 +78,15 @@ body
     height: 20px;
     width: 50px;
 }
-.registrationSuccess
+
+.leftEventLabelSuccess
 {
     color: lightgreen;
+    font-size: 20px;
+}
+.leftEventLabelFail
+{
+    color: red;
     font-size: 20px;
 }
 
@@ -100,7 +106,7 @@ body
     height: 20px;
     width: 70px;
 }
-.registationErrorLabel
+.rightEventLabel
 {
     color: red;
     font-size: 20px;
