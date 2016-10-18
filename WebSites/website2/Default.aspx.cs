@@ -41,22 +41,18 @@ public partial class _Default : System.Web.UI.Page
             Server.Transfer("LoggedIN.aspx", true);
         }
     }
-
+    //Kollar username efter andra tecken än 0-9, A-Z, a-z
     private bool checkUsername(string un)
     {
         bool check = true;
         byte[] ASCIIValues = Encoding.ASCII.GetBytes(un);
         for (int i = 0; i < ASCIIValues.Length;)
         {
-            if ((ASCIIValues[i] <= 57 && ASCIIValues[i] >= 48) || (ASCIIValues[i] <= 90 && ASCIIValues[i] >= 65) || (ASCIIValues[i] <= 122 && ASCIIValues[i] >= 97))
+            if (!(ASCIIValues[i] <= 57 && ASCIIValues[i] >= 48) || !(ASCIIValues[i] <= 90 && ASCIIValues[i] >= 65) || !(ASCIIValues[i] <= 122 && ASCIIValues[i] >= 97))
             {
+                check = false;
+                break;
             }
-        else
-        {
-            leftEventLabel.CssClass = "leftEventLabelFail";
-            leftEventLabel.Text = "Uppgifter felaktiga";
-            leftEventLabel.Visible = true;
-        }
             i++;
     }
         return check;
@@ -77,18 +73,18 @@ public partial class _Default : System.Web.UI.Page
 
 
 
-        //Lite fenhantering (borde kollas efter specifika chars osv.) orkarde inte regex
+        //Lite felhantering (borde kollas efter specifika chars osv.) orkarde inte regex
         if (username != "")
         {
             if (!checkUsername(username))
             {
-                registrationError.Text = "*Användarnamnet får endast innehålla karaktärerna 0-9, A-Z, a-z";
-                registrationError.Visible = true;
+                rightEventLabel.Text = "*Användarnamnet får endast innehålla karaktärerna 0-9, A-Z, a-z";
+                rightEventLabel.Visible = true;
             }
             else if (!sql.checkDuplicate(username))
             {
-                registrationError.Text = "*Användarnamnet är upptaget";
-                registrationError.Visible = true;
+                rightEventLabel.Text = "*Användarnamnet är upptaget";
+                rightEventLabel.Visible = true;
             }
             else if (password == passwordRepeat && password != "")
             {
@@ -115,5 +111,6 @@ public partial class _Default : System.Web.UI.Page
             leftEventLabel.Visible = true;
             rightEventLabel.Visible = false;
         }
+
     }
 }
