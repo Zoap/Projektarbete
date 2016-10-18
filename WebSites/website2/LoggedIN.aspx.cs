@@ -11,8 +11,8 @@ public partial class LoggedIN : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         //Kollar om Username finns i den aktiva sessionen
-        //if (String.IsNullOrEmpty((string)Session["Username"]))
-        //    Server.Transfer("Default.aspx?SessionActive=false", true);
+        if (String.IsNullOrEmpty((string)Session["Username"]))
+            Server.Transfer("Default.aspx?SessionActive=false", true);
 
     }
 }
