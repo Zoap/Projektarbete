@@ -15,8 +15,6 @@ public partial class _Default : System.Web.UI.Page
         //Kollar om RegSucess är satt till True
         if (Request.QueryString["RegSuccess"] == "true")
         {
-            registrationSuccess.Text = "Registration successfull!";
-            registrationSuccess.Visible = true;
         }
     }
 
@@ -43,6 +41,8 @@ public partial class _Default : System.Web.UI.Page
     }
     protected void btnRegistration_Click(object sender, EventArgs e)
     {
+        registrationSuccess.Visible = false;
+
         bool regSuccess = false;
         //NameValueCollection formCollection = Request.Form;
 
@@ -71,7 +71,10 @@ public partial class _Default : System.Web.UI.Page
         }
 
         if (regSuccess)
-            //Matar med en parameter till Default.aspx, RegSuccess = true
-            Server.Transfer("Default.aspx?RegSuccess=true", true);
+        {
+            registrationSuccess.Text = "Registration successfull!";
+            registrationSuccess.Visible = true;
+            registrationError.Visible = false;
+        }
     }
 }
