@@ -13,9 +13,11 @@ public partial class _Default : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        //Kollar om RegSucess är satt till True
-        if (Request.QueryString["RegSuccess"] == "true")
+        if (Request.QueryString["SessionActive"] == "false")
         {
+            leftEventLabel.CssClass = "leftEventLabelFail";
+            leftEventLabel.Text = "Sessionen är utgången";
+            leftEventLabel.Visible = true;
         }
     }
 
@@ -30,9 +32,12 @@ public partial class _Default : System.Web.UI.Page
 
     private void handleLogin(string username, string password)
     {
-        //TODO: Kolla om en SESSION är satt annars ska man inte unna komma åt LoggedIN.aspx
+        //IF session active -> direkt till LoggedIN.aspx
+        Session.Abandon();
         if (sql.Login(username) == password)
         {
+            //Skapar session
+            Session["Username"] = username;
             Server.Transfer("LoggedIN.aspx", true);
         }
     }
@@ -46,20 +51,21 @@ public partial class _Default : System.Web.UI.Page
             if ((ASCIIValues[i] <= 57 && ASCIIValues[i] >= 48) || (ASCIIValues[i] <= 90 && ASCIIValues[i] >= 65) || (ASCIIValues[i] <= 122 && ASCIIValues[i] >= 97))
             {
             }
-            else
-            {
-                check = false;
-                break;
-            }
-            i++;
+        else
+        {
+            leftEventLabel.CssClass = "leftEventLabelFail";
+            leftEventLabel.Text = "Uppgifter felaktiga";
+            leftEventLabel.Visible = true;
         }
+            i++;
+    }
         return check;
     }
 
 
     protected void btnRegistration_Click(object sender, EventArgs e)
     {
-        registrationSuccess.Visible = false;
+        leftEventLabel.Visible = false;
 
         bool regSuccess = false;
         //NameValueCollection formCollection = Request.Form;
@@ -88,25 +94,26 @@ public partial class _Default : System.Web.UI.Page
             {
                 regSuccess = sql.Register(username, password);
                 if (!regSuccess)
-                    registrationError.Text = "Något gick super fel :(";
+                    rightEventLabel.Text = "Något gick super fel :(";
             }
             else
             {
-                registrationError.Text = "*Lösenordet måste matcha";
-                registrationError.Visible = true;
+                rightEventLabel.Text = "*Lösenordet måste matcha";
+                rightEventLabel.Visible = true;
             }
         }
         else
         {
-            registrationError.Text = "*Användarnamnet är inte giltigt.";
-            registrationError.Visible = true;
+            rightEventLabel.Text = "*Användarnamnet är inte giltigt.";
+            rightEventLabel.Visible = true;
         }
 
         if (regSuccess)
         {
-            registrationSuccess.Text = "Registration successfull!";
-            registrationSuccess.Visible = true;
-            registrationError.Visible = false;
+            leftEventLabel.CssClass = "leftEventLabelSuccess";
+            leftEventLabel.Text = "Registration successfull!";
+            leftEventLabel.Visible = true;
+            rightEventLabel.Visible = false;
         }
     }
 }
