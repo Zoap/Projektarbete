@@ -22,9 +22,8 @@ public partial class _Default : System.Web.UI.Page
 
     protected void btnLogin_Click(object sender, EventArgs e)
     {
-        //NameValueCollection formCollection = Request.Form;
-        string username = loginUsername.Text;//formCollection["loginUsername"];
-        string password = loginPassword.Text;//formCollection["loginPassword"];
+        string username = loginUsername.Text;
+        string password = loginPassword.Text;
 
         handleLogin(username, password);
     }
@@ -32,20 +31,24 @@ public partial class _Default : System.Web.UI.Page
     private void handleLogin(string username, string password)
     {
         //IF session active -> direkt till LoggedIN.aspx
-        Session.Abandon();
-        if (sql.Login(username) == password)
-        {
-            //Skapar session
-            Session["Username"] = username;
-            Server.Transfer("LoggedIN.aspx", true);
-        }
-        else
-        {
-            leftEventLabel.CssClass = "leftEventLabelFail";
-            leftEventLabel.Text = "Uppgifter felaktiga";
-            leftEventLabel.Visible = true;
-        }
+        //Session.Abandon finns för debugg syfte endast
+        //Session.Abandon();
+        Server.Transfer("LoggedIN.aspx", true);
+
+         /*if (sql.Login(username) == password)
+         {
+             //Skapar session
+             Session["Username"] = username;
+             Server.Transfer("LoggedIN.aspx", true);
+         }
+         else
+         {
+             leftEventLabel.CssClass = "leftEventLabelFail";
+             leftEventLabel.Text = "Uppgifter felaktiga";
+             leftEventLabel.Visible = true;
+         }*/
     }
+
     protected void btnRegistration_Click(object sender, EventArgs e)
     {
         leftEventLabel.Visible = false;
@@ -79,10 +82,10 @@ public partial class _Default : System.Web.UI.Page
 
         if (regSuccess)
         {
-            leftEventLabel.CssClass = "leftEventLabelSuccess";
-            leftEventLabel.Text = "Registration successfull!";
-            leftEventLabel.Visible = true;
-            rightEventLabel.Visible = false;
+            rightEventLabel.CssClass = "leftEventLabelSuccess";
+            rightEventLabel.Text = "Registration successfull!";
+            rightEventLabel.Visible = true;
+            leftEventLabel.Visible = false;
         }
     }
 }

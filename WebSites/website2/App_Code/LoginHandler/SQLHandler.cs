@@ -40,6 +40,7 @@ public class SQLHandler
         try
         {
             conn.Open();
+
             MySqlCommand query = new MySqlCommand(command, conn);
 
             //Behövde tydligen köra denna för att queryn skulle executas
