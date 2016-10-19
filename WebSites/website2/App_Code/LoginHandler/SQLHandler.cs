@@ -17,7 +17,6 @@ public class SQLHandler
     
     private string getQueryResult(string cmd)
     {
-        
         conn.Open();
         MySqlCommand query = new MySqlCommand(cmd, conn);
         string text = Convert.ToString(query.ExecuteScalar());
@@ -34,7 +33,7 @@ public class SQLHandler
         conn.Close();
     }
 
-    public string Login(string un)
+    public string login(string un)
     {
         string command = string.Format("SELECT password FROM user where username = '{0}'", un);
         string text = getQueryResult(command);

@@ -15,7 +15,24 @@ public class ErrorHandling
     private SQLHandler sql = new SQLHandler();
 
     //private SQLHandler sql = new SQLHandler();
-    public string color = string.Empty;
+    private string _color = string.Empty;
+    public string color
+    {
+        get
+        {
+            return _color;
+        }
+    }
+
+    private bool _state = false;
+    public bool state
+    {
+        get
+        {
+            return _state;
+        }
+    }
+
 
     public ErrorHandling()
     {
@@ -23,8 +40,9 @@ public class ErrorHandling
         // TODO: Add constructor logic here
         //
     }
+
     //Kollar username efter andra tecken än 0-9, A-Z, a-z
-    public bool checkUsername(string un)
+    private bool checkUsername(string un)
     {
         bool check = true;
 
@@ -39,12 +57,11 @@ public class ErrorHandling
         return check;
     }
 
-
-
     public string registration(string username, string password, string passwordRepeat)
     {
-        string message = string.Empty;
-
+        string message;
+        string red = "leftEventLabelFail";
+        string green = "leftEventLabelSuccess";
 
         //Lite felhantering (borde kollas efter specifika chars osv.) orkarde inte regex
         if (username != "")
@@ -52,32 +69,46 @@ public class ErrorHandling
             if (!checkUsername(username))
             {
                 message = "*Användarnamnet får endast innehålla karaktärerna 0-9, A-Z, a-z";
-                color = "leftEventLabelFail";
+                _color = red;
             }
             else if (sql.checkDuplicate(username))
             {
                 message = "*Användarnamnet är upptaget";
-                color = "leftEventLabelFail";
+                _color = red;
             }
             else if (password == passwordRepeat && password != "")
             {
-                sql.Register(username, password);
+                _state = true;
                 message = "Registration successfull!";
-                color = "leftEventLabelSuccess";
+                _color = green;
             }
             else
             {
                 message = "*Lösenordet måste matcha";
-                color = "leftEventLabelFail";
+                _color = red;
             }
         }
         else
         {
             message = "*Användarnamnet är inte giltigt.";
-            color = "leftEventLabelFail";
+            _color = red;
         }
-        
-            return message;
+        return message;
     }
+    public string login(string username, string password)
+    {
+        string message = string.Empty;
+        string pass = sql.login(username);
 
+        if (password == pass && !string.IsNullOrEmpty(pass))
+        {
+            _state = true;
+        }
+        else
+        {
+            message = "*Felaktigt användarnamn/lösenord";
+        }
+
+        return message;
+    }
 }

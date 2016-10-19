@@ -24,39 +24,10 @@ public partial class _Default : System.Web.UI.Page
 
     protected void btnLogin_Click(object sender, EventArgs e)
     {
-        //NameValueCollection formCollection = Request.Form;
-        string username = loginUsername.Text;//formCollection["loginUsername"];
-        string password = loginPassword.Text;//formCollection["loginPassword"];
+        string username = loginUsername.Text;
+        string password = loginPassword.Text;
 
         handleLogin(username, password);
-        //if (sql.Login(username) == password)
-        //{
-        //    Server.Transfer("LoggedIN.aspx");
-        //}
-        //else
-        //{
-        //    leftEventLabel.CssClass = "leftEventLabelFail";
-        //    leftEventLabel.Text = "*Felaktigt lösenord";
-        //    leftEventLabel.Visible = true;
-        //}
-    }
-
-    private void handleLogin(string username, string password)
-    {
-        //IF session active -> direkt till LoggedIN.aspx
-        Session.Abandon();
-        if (sql.Login(username) == password)
-        {
-            //Skapar session
-            Session["Username"] = username;
-            Server.Transfer("LoggedIN.aspx", true);
-        }
-        else
-        {
-            leftEventLabel.CssClass = "leftEventLabelFail";
-            leftEventLabel.Text = "*Felaktigt lösenord";
-            leftEventLabel.Visible = true;
-        }
     }
 
     protected void btnRegistration_Click(object sender, EventArgs e)
@@ -65,12 +36,8 @@ public partial class _Default : System.Web.UI.Page
         string username = registrationUsername.Text;
         string password = registrationPassword.Text;
         string passwordRepeat = registrationPasswordRepeat.Text;
-        string message = error.registration(username, password, passwordRepeat);
-        string color = error.color;
 
-        rightEventLabel.CssClass = color;
-        rightEventLabel.Text = message;
-        rightEventLabel.Visible = true;
+        handleRegistration(username, password, passwordRepeat);
     }
 
     protected void loginPassword_TextChanged(object sender, EventArgs e)
@@ -79,5 +46,40 @@ public partial class _Default : System.Web.UI.Page
 
     protected void registrationPassword_TextChanged(object sender, EventArgs e)
     {
+    }
+
+    private void handleLogin(string username, string password)
+    {
+        string message = error.login(username, password);
+
+        //IF session active -> direkt till LoggedIN.aspx
+        Session.Abandon();
+        if (error.state)
+        {
+            //Skapar session
+            Session["Username"] = username;
+            Server.Transfer("LoggedIN.aspx", true);
+        }
+        else
+        {
+            leftEventLabel.CssClass = "leftEventLabelFail";
+            leftEventLabel.Text = message;
+            leftEventLabel.Visible = true;
+        }
+    }
+
+    private void handleRegistration(string username, string password, string passwordRepeat)
+    {
+        string message = error.registration(username, password, passwordRepeat);
+        string color = error.color;
+        bool state = error.state;
+
+        if (state)
+        {
+            sql.Register(username, password);
+        }      
+        rightEventLabel.CssClass = color;
+        rightEventLabel.Text = message;
+        rightEventLabel.Visible = true;
     }
 }
