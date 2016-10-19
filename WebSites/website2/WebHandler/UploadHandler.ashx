@@ -18,10 +18,11 @@ public class Handler : IHttpHandler {
         context.Response.Write("File uploaded successfully!");
     }
 
-    public bool IsReusable {
-        get {
+    public bool IsReusable
+    {
+        get
+        {
             return false;
         }
     }
-
 }

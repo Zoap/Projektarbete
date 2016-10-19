@@ -62,8 +62,10 @@ public partial class _Default : System.Web.UI.Page
         }
         else
         {
-            leftEventLabel.CssClass = "leftEventLabelFail";
-            leftEventLabel.Text = message;
+            registrationUsername.Text = string.Empty;
+            rightEventLabel.Text = message;
+            leftEventLabel.CssClass = error.color;
+            rightEventLabel.Visible = false;
             leftEventLabel.Visible = true;
         }
     }
@@ -71,15 +73,16 @@ public partial class _Default : System.Web.UI.Page
     private void handleRegistration(string username, string password, string passwordRepeat)
     {
         string message = error.registration(username, password, passwordRepeat);
-        string color = error.color;
-        bool state = error.state;
 
-        if (state)
+        if (error.state)
         {
             sql.Register(username, password);
-        }      
-        rightEventLabel.CssClass = color;
+        }
+
+        loginUsername.Text = string.Empty;
         rightEventLabel.Text = message;
+        rightEventLabel.CssClass = error.color;
+        leftEventLabel.Visible = false;
         rightEventLabel.Visible = true;
     }
 }

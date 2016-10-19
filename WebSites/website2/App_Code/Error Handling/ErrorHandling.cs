@@ -14,7 +14,10 @@ public class ErrorHandling
 {
     private SQLHandler sql = new SQLHandler();
 
-    //private SQLHandler sql = new SQLHandler();
+    private string red = "leftEventLabelFail";
+    private string green = "leftEventLabelSuccess";
+
+    //styr vilken css klass label skall anta
     private string _color = string.Empty;
     public string color
     {
@@ -24,6 +27,7 @@ public class ErrorHandling
         }
     }
 
+    //Används som variabel utanför ErrorHandling för att kolla om fel upptäckts
     private bool _state = false;
     public bool state
     {
@@ -33,12 +37,8 @@ public class ErrorHandling
         }
     }
 
-
     public ErrorHandling()
     {
-        //
-        // TODO: Add constructor logic here
-        //
     }
 
     //Kollar username efter andra tecken än 0-9, A-Z, a-z
@@ -54,17 +54,61 @@ public class ErrorHandling
                 break;
             }
         }
+
         return check;
     }
 
+    private bool checkPassword(string password)
+    {
+        bool check = true;
+        int upper = 0;
+        int special = 0;
+        int number = 0;
+
+        //kollar om lösenordet är minst 6 karaktärer långt och innehåller minst en versal och en av följande karaktärer: ] [ ? / < ~ # ` ! @ $ % ^ & * ( ) + = } | : " ; ' , > { space
+        foreach (char x in password)
+        {
+            if ((x <= 90 && x >= 65))
+            {
+                upper++;
+            }
+            else if ((x <= 43 && x >= 32) || (x == 47) || (x <= 64 && x >= 58) || (x <= 94 && x >= 93) || (x == 91) || (x <= 126 && x >= 123))
+            {
+                special++;
+            }
+            else if ((x <= 57 && x >= 48))
+            {
+                number++;
+            }
+        }
+
+        if (password.Length < 6)
+        {
+            check = false;
+        }
+        else if (upper <= 0)
+        {
+            check = false;
+        }
+        else if (special <= 0)
+        {
+            check = false;
+        }
+        else if (number <= 0)
+        {
+            check = false;
+        }
+
+        return check;
+    }
+
+    //Felhantering i registreringsfasen
     public string registration(string username, string password, string passwordRepeat)
     {
         string message;
-        string red = "leftEventLabelFail";
-        string green = "leftEventLabelSuccess";
 
         //Lite felhantering (borde kollas efter specifika chars osv.) orkarde inte regex
-        if (username != "")
+        if (!string.IsNullOrEmpty(username))
         {
             if (!checkUsername(username))
             {
@@ -76,25 +120,37 @@ public class ErrorHandling
                 message = "*Användarnamnet är upptaget";
                 _color = red;
             }
-            else if (password == passwordRepeat && password != "")
+            else if (!checkPassword(password))
+            {
+                message = "*Lösenordet måste vara minst 6 tecken långt, innehålla minst en versal, en siffra och ett av följande tecken: ] [ ? / < ~ # ` ! @ $ % ^ & * ( ) + = } | : \" ; ' , > { space";
+                _color = red;
+            }
+            else if (password == passwordRepeat && !string.IsNullOrEmpty(password))
             {
                 _state = true;
                 message = "Registration successfull!";
                 _color = green;
             }
-            else
+            else if (password != passwordRepeat && !string.IsNullOrEmpty(password))
             {
                 message = "*Lösenordet måste matcha";
+                _color = red;
+            }
+            else
+            {
+                message = "*Lösenordsfältet kan inte vara tomt";
                 _color = red;
             }
         }
         else
         {
-            message = "*Användarnamnet är inte giltigt.";
+            message = "*Användarnamnsfältet kan inte vara tomt";
             _color = red;
         }
         return message;
     }
+
+    //Felhantering i login fasen
     public string login(string username, string password)
     {
         string message = string.Empty;
@@ -107,6 +163,7 @@ public class ErrorHandling
         else
         {
             message = "*Felaktigt användarnamn/lösenord";
+            _color = red;
         }
 
         return message;
