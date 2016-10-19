@@ -2,20 +2,29 @@
 
 using System;
 using System.Web;
+using System.Web.SessionState;
+using System.IO;
 
-public class Handler : IHttpHandler {
+public class Handler : IHttpHandler, IRequiresSessionState {
 
     public void ProcessRequest (HttpContext context)
     {
         if (context.Request.Files.Count > 0)
         {
-            HttpPostedFile file = context.Request.Files[0];
-            string fileName = file.FileName;
-            fileName = context.Server.MapPath("~/uploads/" + context.Session["Username"] + fileName);
-            file.SaveAs(fileName);
+            HttpPostedFile formFile = context.Request.Files[0];
+            string diskPath = "C:/uploads";
+            string fullPath = diskPath + "/" + context.Session["Username"] + "/";
+            UserFile file = new UserFile(context.Session["Username"].ToString(), formFile.FileName, fullPath, formFile.ContentLength); 
+
+            if (!Directory.Exists(diskPath))
+                Directory.CreateDirectory(diskPath);
+            if (Directory.Exists(diskPath + context.Session["Username"]))
+                Directory.CreateDirectory(diskPath + context.Session["Username"]);
+            
+            formFile.SaveAs(file.getFilePath + file.getFileName);
         }
-        context.Response.ContentType = "text/plain";
-        context.Response.Write("File uploaded successfully!");
+        context.Response.ContentType = "application/json";
+        context.Response.Write("Handler request successfull.");
     }
 
     public bool IsReusable {

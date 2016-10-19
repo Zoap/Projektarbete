@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Web.Services;
 using System.IO;
 
 public partial class LoggedIN : System.Web.UI.Page
@@ -12,7 +13,9 @@ public partial class LoggedIN : System.Web.UI.Page
     {
         //Kollar om Username finns i den aktiva sessionen
         if (String.IsNullOrEmpty((string)Session["Username"]))
-            Server.Transfer("Default.aspx?SessionActive=false", true);
+        {
+            Server.Transfer("Default.aspx?SessionActive=false", false);
+        }
 
     }
 }

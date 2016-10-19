@@ -13,12 +13,16 @@ public partial class _Default : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Request.QueryString["SessionActive"] == "false")
-        {
-            leftEventLabel.CssClass = "leftEventLabelFail";
-            leftEventLabel.Text = "Sessionen är inte aktiv";
-            leftEventLabel.Visible = true;
+        if (String.IsNullOrEmpty((string)Session["Username"]))
+        { 
+            if (Request.QueryString["SessionActive"] == "false")
+            {
+                leftEventLabel.CssClass = "leftEventLabelFail";
+                leftEventLabel.Text = "Sessionen är inte aktiv";
+                leftEventLabel.Visible = true;
+            }
         }
+    
     }
 
     protected void btnLogin_Click(object sender, EventArgs e)
@@ -43,7 +47,7 @@ public partial class _Default : System.Web.UI.Page
     private void handleLogin(string username, string password)
     {
         //IF session active -> direkt till LoggedIN.aspx
-        Session.Abandon();
+        //Session.Abandon(); //för debugg
         if (sql.Login(username) == password)
         {
             //Skapar session
