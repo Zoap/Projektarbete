@@ -12,7 +12,7 @@ body
 #Wrapper
 {
 	padding-top: 50px;
-	margin: auto;
+	margin: auto 56px auto 636px;
 	width: 30%;
 }
 #Header
@@ -28,13 +28,15 @@ body
     #loginContentLeft
     {
         float: left;
-        width: 50%;
+        width: 53%;
         height: 400px;
-        border-right: 1px solid;
-    }
+        border-right-style: solid;
+    border-right-color: inherit;
+    border-right-width: 1px;
+}
     #loginContentRight
     {
-        float: right;
+        float: left;
         width: 46%;
         height: 400px;
     }
@@ -42,18 +44,21 @@ body
 #mainContent
 {
     padding-top: 60px;
+    width: 467px;
 }
     #mainContentUpload
     {
         float: left;
-        width: 50%;
+        width: 53%;
         height: 400px;
-        border-right: 1px solid;
+        border-right-style: solid;
+    border-right-color: inherit;
+    border-right-width: 1px;
     }
     #mainContentMyFiles
     {
         float: right;
-        width: 46%;
+        width: 39%;
         height: 400px;
     }
 
@@ -110,4 +115,16 @@ body
 {
     color: red;
     font-size: 20px;
+}
+body 
+{
+    font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+
+    background-image:url('server_inst_eyes_open.gif');
+    background-repeat:no-repeat;
+    background-attachment:scroll;
+    background-position: 380px 140px;
+    background-size: 26%;
 }

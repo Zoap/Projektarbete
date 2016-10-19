@@ -26,6 +26,14 @@ public class SQLHandler
         return text;
     }
 
+    private void executeCommand(string cmd)
+    {
+        conn.Open();
+        MySqlCommand query = new MySqlCommand(cmd, conn);
+        query.ExecuteNonQuery();
+        conn.Close();
+    }
+
     public string Login(string un)
     {
         string command = string.Format("SELECT password FROM user where username = '{0}'", un);
@@ -37,7 +45,7 @@ public class SQLHandler
     public bool checkDuplicate(string un)
     {
         bool check;
-        string command = string.Format("SELECT username FROM user where username = '{0}'", un);
+        string command = string.Format("SELECT username FROM user where username = '{0}'", un.ToLower());
         string text = getQueryResult(command);
 
         if (un == text)
@@ -48,26 +56,14 @@ public class SQLHandler
         {
             check = false;
         }
-
         return check;
     }
 
     public bool Register(string un, string pw)
     {
         string command = string.Format("INSERT INTO user(username, password) VALUES('{0}', '{1}')", un, pw);
-        try
-        {
-            conn.Open();
-            MySqlCommand query = new MySqlCommand(command, conn);
+        executeCommand(command);
 
-            //Behövde tydligen köra denna för att queryn skulle executas
-            query.ExecuteNonQuery();
-
-            conn.Close();
-            return true;
-        }
-        //Catch för debugg
-        catch(MySqlException err)
-        { return false; }
+        return true;
     }
 }

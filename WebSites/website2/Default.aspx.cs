@@ -60,14 +60,12 @@ public partial class _Default : System.Web.UI.Page
         {
             if (!(x <= 122 && x >= 97) && !(x <= 90 && x >= 65) && !(x <= 57 && x >= 48))
             {
-                
                 check = false;
                 break;
             }
         }
         return check;
     }
-
 
     protected void btnRegistration_Click(object sender, EventArgs e)
     {
@@ -98,7 +96,9 @@ public partial class _Default : System.Web.UI.Page
             {
                 regSuccess = sql.Register(username, password);
                 if (!regSuccess)
+                {
                     rightEventLabel.Text = "Något gick super fel :(";
+                }
             }
             else
             {
@@ -120,6 +120,13 @@ public partial class _Default : System.Web.UI.Page
             leftEventLabel.Visible = false;
             rightEventLabel.Visible = true;
         }
+    }
 
+    protected void loginPassword_TextChanged(object sender, EventArgs e)
+    {
+    }
+
+    protected void registrationPassword_TextChanged(object sender, EventArgs e)
+    {
     }
 }
