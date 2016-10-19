@@ -11,6 +11,7 @@ body
 
 #Wrapper
 {
+    font-family: Calibri;
 	padding-top: 50px;
 	margin: auto 56px auto 636px;
 	width: 30%;
@@ -62,6 +63,28 @@ body
         height: 400px;
     }
 
+#dropzoneUpload
+{
+    border: 2px dashed;
+    margin-top: 25px;
+    border-radius: 20px;
+    position: relative;
+    height: 100px;
+    width: 250px;
+}
+    #dropzoneUpload p
+    {
+        font-family: Calibri;
+        margin-top: 25px;
+    }
+    #btnUpload
+    {
+        margin-top: 25px;
+        border-radius: 5px;
+        border: 1px solid black;
+        padding: 5px 5px;
+        font-size: 16px;
+    }
 /* #####################
 		DESIGN
 ##################### */

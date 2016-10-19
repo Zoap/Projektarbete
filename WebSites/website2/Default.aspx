@@ -2,7 +2,7 @@
  
 <!DOCTYPE html>
  
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" runat="server">
 <head runat="server">
     <title>Uploader</title>
     <link rel="shortcut icon" href="server_inst_eyes_open.ico" />
