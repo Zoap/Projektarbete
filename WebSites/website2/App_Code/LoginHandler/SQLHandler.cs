@@ -12,9 +12,9 @@ public class SQLHandler
     private MySqlConnection conn = new MySqlConnection(@"server=localhost;userid=root;password=rootpassword;database=projekt;");
 
     public SQLHandler()
-    {
-       
+    {   
     }
+    
     private string getQueryResult(string cmd)
     {
         
@@ -45,7 +45,7 @@ public class SQLHandler
     public bool checkDuplicate(string un)
     {
         bool check;
-        string command = string.Format("SELECT username FROM user where username = '{0}'", un.ToLower());
+        string command = string.Format("SELECT username FROM user where username = '{0}'", un);
         string text = getQueryResult(command);
 
         if (un == text)
@@ -59,11 +59,9 @@ public class SQLHandler
         return check;
     }
 
-    public bool Register(string un, string pw)
+    public void Register(string un, string pw)
     {
         string command = string.Format("INSERT INTO user(username, password) VALUES('{0}', '{1}')", un, pw);
         executeCommand(command);
-
-        return true;
     }
 }
