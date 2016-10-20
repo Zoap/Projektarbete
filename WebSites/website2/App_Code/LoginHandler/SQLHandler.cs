@@ -14,38 +14,26 @@ public class SQLHandler
     public SQLHandler()
     {   
     }
-    
-    private string getQueryResult(string cmd)
-    {
-        conn.Open();
-        MySqlCommand query = new MySqlCommand(cmd, conn);
-        string text = Convert.ToString(query.ExecuteScalar());
-        conn.Close();
-
-        return text;
-    }
-
-    private void executeCommand(string cmd)
-    {
-        conn.Open();
-        MySqlCommand query = new MySqlCommand(cmd, conn);
-        query.ExecuteNonQuery();
-        conn.Close();
-    }
 
     public string login(string un)
     {
-        string command = string.Format("SELECT password FROM user where username = '{0}'", un);
-        string text = getQueryResult(command);
-
+        conn.Open();
+        MySqlCommand select = new MySqlCommand("SELECT password FROM user where username = @username", conn);
+        select.Parameters.AddWithValue("@username", un);
+        string text = Convert.ToString(select.ExecuteScalar());
+        conn.Close();
+                
         return text;
     }
 
     public bool checkDuplicate(string un)
     {
         bool check;
-        string command = string.Format("SELECT username FROM user where username = '{0}'", un);
-        string text = getQueryResult(command);
+        conn.Open();
+        MySqlCommand select = new MySqlCommand("SELECT username FROM user where username = @username", conn);
+        select.Parameters.AddWithValue("@username", un);
+        string text = Convert.ToString(select.ExecuteScalar());
+        conn.Close();
 
         if (un == text)
         {
@@ -55,12 +43,24 @@ public class SQLHandler
         {
             check = false;
         }
+
         return check;
     }
 
     public void Register(string un, string pw)
     {
-        string command = string.Format("INSERT INTO user(username, password) VALUES('{0}', '{1}')", un, pw);
-        executeCommand(command);
+        conn.Open();
+        MySqlCommand insert = new MySqlCommand("INSERT INTO user(username, password) VALUES(@username, @password)", conn);
+        insert.Parameters.AddWithValue("@username", un);
+        insert.Parameters.AddWithValue("@password", pw);
+        insert.ExecuteNonQuery();
+        commit();
+        conn.Close();
+    }
+
+    private void commit()
+    {
+        MySqlCommand insert = new MySqlCommand("COMMIT", conn);
+        insert.ExecuteNonQuery();
     }
 }
