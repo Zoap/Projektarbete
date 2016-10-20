@@ -63,7 +63,7 @@ public partial class _Default : System.Web.UI.Page
         else
         {
             registrationUsername.Text = string.Empty;
-            rightEventLabel.Text = message;
+            leftEventLabel.Text = message;
             leftEventLabel.CssClass = error.color;
             rightEventLabel.Visible = false;
             leftEventLabel.Visible = true;
