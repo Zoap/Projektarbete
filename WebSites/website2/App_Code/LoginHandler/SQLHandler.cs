@@ -13,19 +13,19 @@ public class SQLHandler
     private MySqlConnection conn = new MySqlConnection(@"server=localhost;userid=root;password=rootpassword;database=projekt;");
 
     public SQLHandler()
-    {   
+    {
     }
 
-
-    public bool login(string un, string pw)
+    //Kollar user table i databasen efter angivet användarnamn och lösenord
+    public bool login(string username, string password)
     {
         bool check;
         int count;
 
         conn.Open();
         MySqlCommand select = new MySqlCommand("SELECT COUNT(*) FROM user WHERE username = @username AND password = @password", conn);
-        select.Parameters.AddWithValue("@username", un);
-        select.Parameters.AddWithValue("@password", pw);
+        select.Parameters.AddWithValue("@username", username);
+        select.Parameters.AddWithValue("@password", password);
         count = Convert.ToInt32(select.ExecuteScalar());
         conn.Close();
 
@@ -41,14 +41,40 @@ public class SQLHandler
         return check;
     }
 
-    public bool checkDuplicate(string un)
+    //Gör en insert mot user table i databasen
+    public void Register(string username, string password)
+    {
+        conn.Open();
+        MySqlCommand insert = new MySqlCommand("INSERT INTO user(username, password) VALUES(@username, @password)", conn);
+        insert.Parameters.AddWithValue("@username", username);
+        insert.Parameters.AddWithValue("@password", password);
+        insert.ExecuteNonQuery();
+        commit();
+        conn.Close();
+    }
+
+    //Gör en insert mot filer table i databasen
+    public void upload(string username, string filename, string filepath)
+    {
+        conn.Open();
+        MySqlCommand insert = new MySqlCommand("INSERT INTO filer(username, filename, filepath) VALUES(@username, @filename, @filepath)", conn);
+        insert.Parameters.AddWithValue("@username", username);
+        insert.Parameters.AddWithValue("@filename", filename);
+        insert.Parameters.AddWithValue("@filpath", filepath);
+        insert.ExecuteNonQuery();
+        commit();
+        conn.Close();
+    }
+
+    //Kollar om användarnamnet redan finns i user table i databasen
+    public bool checkDuplicate(string username)
     {
         bool check;
         int count;
 
         conn.Open();
         MySqlCommand select = new MySqlCommand("SELECT COUNT(*) FROM user WHERE username = @username", conn);
-        select.Parameters.AddWithValue("@username", un);
+        select.Parameters.AddWithValue("@username", username);
         count = Convert.ToInt32(select.ExecuteScalar());
         conn.Close();
 
@@ -64,17 +90,7 @@ public class SQLHandler
         return check;
     }
 
-    public void Register(string un, string pw)
-    {
-        conn.Open();
-        MySqlCommand insert = new MySqlCommand("INSERT INTO user(username, password) VALUES(@username, @password)", conn);
-        insert.Parameters.AddWithValue("@username", un);
-        insert.Parameters.AddWithValue("@password", pw);
-        insert.ExecuteNonQuery();
-        commit();
-        conn.Close();
-    }
-
+    //Utför en commit mot databasen
     private void commit()
     {
         MySqlCommand insert = new MySqlCommand("COMMIT", conn);
