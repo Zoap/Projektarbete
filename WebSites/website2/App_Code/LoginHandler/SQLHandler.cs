@@ -9,33 +9,50 @@ using MySql.Data.MySqlClient;
 /// </summary>
 public class SQLHandler
 {
+    //Skapar en ny anslutning mot databasen
     private MySqlConnection conn = new MySqlConnection(@"server=localhost;userid=root;password=rootpassword;database=projekt;");
 
     public SQLHandler()
     {   
     }
 
-    public string login(string un)
+
+    public bool login(string un, string pw)
     {
+        bool check;
+        int count;
+
         conn.Open();
-        MySqlCommand select = new MySqlCommand("SELECT password FROM user where username = @username", conn);
+        MySqlCommand select = new MySqlCommand("SELECT COUNT(*) FROM user WHERE username = @username AND password = @password", conn);
         select.Parameters.AddWithValue("@username", un);
-        string text = Convert.ToString(select.ExecuteScalar());
+        select.Parameters.AddWithValue("@password", pw);
+        count = Convert.ToInt32(select.ExecuteScalar());
         conn.Close();
-                
-        return text;
+
+        if (count >= 1)
+        {
+            check = true;
+        }
+        else
+        {
+            check = false;
+        }
+
+        return check;
     }
 
     public bool checkDuplicate(string un)
     {
         bool check;
+        int count;
+
         conn.Open();
-        MySqlCommand select = new MySqlCommand("SELECT username FROM user where username = @username", conn);
+        MySqlCommand select = new MySqlCommand("SELECT COUNT(*) FROM user WHERE username = @username", conn);
         select.Parameters.AddWithValue("@username", un);
-        string text = Convert.ToString(select.ExecuteScalar());
+        count = Convert.ToInt32(select.ExecuteScalar());
         conn.Close();
 
-        if (un == text)
+        if (count >= 1)
         {
             check = true;
         }

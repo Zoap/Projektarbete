@@ -154,9 +154,8 @@ public class ErrorHandling
     public string login(string username, string password)
     {
         string message = string.Empty;
-        string pass = sql.login(username);
 
-        if (password == pass && !string.IsNullOrEmpty(pass))
+        if (sql.login(username, password))
         {
             _state = true;
         }
