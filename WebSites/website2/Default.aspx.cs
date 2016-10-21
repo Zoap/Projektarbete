@@ -20,6 +20,8 @@ public partial class _Default : System.Web.UI.Page
             leftEventLabel.Text = "Sessionen är inte aktiv";
             leftEventLabel.Visible = true;
         }
+
+        loginUsername.Focus();
     }
 
     protected void btnLogin_Click(object sender, EventArgs e)
@@ -34,10 +36,11 @@ public partial class _Default : System.Web.UI.Page
     {
         //Det går att hämta asp: taggarna på sidan direkt!
         string username = registrationUsername.Text;
+        string email = registrationEmail.Text;
         string password = registrationPassword.Text;
         string passwordRepeat = registrationPasswordRepeat.Text;
 
-        handleRegistration(username, password, passwordRepeat);
+        handleRegistration(username, email, password, passwordRepeat);
     }
 
     private void handleLogin(string username, string password)
@@ -62,13 +65,13 @@ public partial class _Default : System.Web.UI.Page
         }
     }
 
-    private void handleRegistration(string username, string password, string passwordRepeat)
+    private void handleRegistration(string username, string email, string password, string passwordRepeat)
     {
-        string message = error.registration(username, password, passwordRepeat);
+        string message = error.registration(username, email,  password, passwordRepeat);
 
         if (error.state)
         {
-            sql.Register(username, password);
+            sql.Register(username, email, password);
         }
 
         loginUsername.Text = string.Empty;

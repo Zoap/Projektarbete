@@ -9,11 +9,11 @@
     <link rel="stylesheet" type="text/css" href="style.css" />
     <style type="text/css">
         .auto-style1 {
-            text-align: right;
+            text-align: left;
             width: 27px;
         }
         .auto-style2 {
-            text-align: right;
+            text-align: left;
             width: 30px;
         }
         #loginRegisterForm {
@@ -35,13 +35,13 @@
                         </tr>
                         <tr class="spacingFix"><td colspan="2"></td></tr>
                         <tr>
-                            <td class="auto-style1">Användarnamn</td>
+                            <td class="auto-style1">Username:</td>
                             <td>
                                 <asp:TextBox ID="loginUsername" runat="server" placeholder="Username" BorderStyle="Solid"></asp:TextBox>
                             </td>
                         </tr>
                         <tr>
-                            <td class="auto-style1">Lösenord</td>
+                            <td class="auto-style1">Password:</td>
                             <td>
                                 <asp:TextBox ID="loginPassword" TextMode="password" runat="server" placeholder="Password" BorderStyle="Solid"></asp:TextBox>
                             </td>
@@ -62,19 +62,25 @@
                         </tr>
                         <tr class="spacingFix"><td colspan="2"></td></tr>
                         <tr>
-                            <td class="auto-style2">Användarnamn</td>
+                            <td class="auto-style2">Username:</td>
                             <td>
                                 <asp:TextBox ID="registrationUsername" runat="server" placeholder="Username" BorderStyle="Solid"></asp:TextBox>
                             </td>
                         </tr>
+                         <tr>
+                            <td class="auto-style2">E-mail:</td>
+                            <td>
+                                <asp:TextBox ID="registrationEmail" runat="server" placeholder="E-mail" BorderStyle="Solid"></asp:TextBox>
+                            </td>
+                        </tr>
                         <tr>
-                            <td class="auto-style2">Lösenord</td>
+                            <td class="auto-style2">Password:</td>
                             <td>
                                 <asp:TextBox ID="registrationPassword" TextMode="password" runat="server" placeholder="Password" BorderStyle="Solid"></asp:TextBox>
                             </td>
                         </tr>
                         <tr>
-                            <td class="auto-style2">Repetera</td>
+                            <td class="auto-style2">Repeat:</td>
                             <td>
                                 <asp:TextBox ID="registrationPasswordRepeat" TextMode="password" runat="server" placeholder="Password(Repeat)" BorderStyle="Solid"></asp:TextBox>
                             </td>

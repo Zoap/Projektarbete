@@ -103,7 +103,7 @@ public class ErrorHandling
     }
 
     //Felhantering i registreringsfasen
-    public string registration(string username, string password, string passwordRepeat)
+    public string registration(string username, string email, string password, string passwordRepeat)
     {
         string message;
 
@@ -115,9 +115,20 @@ public class ErrorHandling
                 message = "*Användarnamnet får endast innehålla karaktärerna 0-9, A-Z, a-z";
                 _color = red;
             }
-            else if (sql.checkDuplicate(username))
+            else if (sql.checkDuplicateUser(username))
             {
                 message = "*Användarnamnet är upptaget";
+                _color = red;
+
+            }
+            else if (string.IsNullOrEmpty(email))
+            {
+                message = "*En E-mailadress måste anges";
+                _color = red;
+            }
+            else if (sql.checkDuplicateEmail(email))
+            {
+                message = "*E-mail adressen är redan knutet till ett konto";
                 _color = red;
             }
             else if (!checkPassword(password))

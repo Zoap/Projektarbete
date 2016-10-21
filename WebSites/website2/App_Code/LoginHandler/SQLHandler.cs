@@ -42,12 +42,13 @@ public class SQLHandler
     }
 
     //Gör en insert mot user table i databasen
-    public void Register(string username, string password)
+    public void Register(string username, string email, string password)
     {
         conn.Open();
-        MySqlCommand insert = new MySqlCommand("INSERT INTO user(username, password) VALUES(@username, @password)", conn);
+        MySqlCommand insert = new MySqlCommand("INSERT INTO user(username, email, password) VALUES(@username, @email, @password)", conn);
         insert.Parameters.AddWithValue("@username", username);
         insert.Parameters.AddWithValue("@password", password);
+        insert.Parameters.AddWithValue("@email", email);
         insert.ExecuteNonQuery();
         commit();
         conn.Close();
@@ -67,7 +68,7 @@ public class SQLHandler
     }
 
     //Kollar om användarnamnet redan finns i user table i databasen
-    public bool checkDuplicate(string username)
+    public bool checkDuplicateUser(string username)
     {
         bool check;
         int count;
@@ -75,6 +76,29 @@ public class SQLHandler
         conn.Open();
         MySqlCommand select = new MySqlCommand("SELECT COUNT(*) FROM user WHERE username = @username", conn);
         select.Parameters.AddWithValue("@username", username);
+        count = Convert.ToInt32(select.ExecuteScalar());
+        conn.Close();
+
+        if (count >= 1)
+        {
+            check = true;
+        }
+        else
+        {
+            check = false;
+        }
+
+        return check;
+    }
+
+    public bool checkDuplicateEmail(string email)
+    {
+        bool check;
+        int count;
+
+        conn.Open();
+        MySqlCommand select = new MySqlCommand("SELECT COUNT(*) FROM user WHERE email = @email", conn);
+        select.Parameters.AddWithValue("@email", email);
         count = Convert.ToInt32(select.ExecuteScalar());
         conn.Close();
 
