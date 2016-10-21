@@ -11,19 +11,21 @@ public class Handler : IHttpHandler, IRequiresSessionState {
     {
         if (context.Request.Files.Count > 0)
         {
+            SQLHandler updateDB = new SQLHandler();
             HttpPostedFile formFile = context.Request.Files[0];
             string diskPath = "C:/uploads";
             string fullPath = diskPath + "/" + context.Session["Username"] + "/";
-            UserFile file = new UserFile(context.Session["Username"].ToString(), formFile.FileName, fullPath, formFile.ContentLength); 
+            UserFile file = new UserFile(context.Session["Username"].ToString(), formFile.FileName, fullPath, formFile.ContentLength);
 
             if (!Directory.Exists(diskPath))
                 Directory.CreateDirectory(diskPath);
             if (Directory.Exists(diskPath + context.Session["Username"]))
                 Directory.CreateDirectory(diskPath + context.Session["Username"]);
-            
+
             formFile.SaveAs(file.getFilePath + file.getFileName);
+            updateDB.FileUpload(file);
         }
-        context.Response.ContentType = "application/json";
+        context.Response.ContentType = "text/plain";
         context.Response.Write("Handler request successfull.");
     }
 

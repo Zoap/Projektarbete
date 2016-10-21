@@ -45,12 +45,12 @@ body
 #mainContent
 {
     padding-top: 60px;
-    width: 467px;
+    width: 900px;
 }
     #mainContentUpload
     {
         float: left;
-        width: 60%;
+        width: 30%;
         height: 400px;
         border-right-style: solid;
         border-right-color: inherit;
@@ -58,10 +58,55 @@ body
     }
     #mainContentMyFiles
     {
-        float: right;
-        width: 39%;
-        height: 400px;
+        float:right;
+        position:relative;
+        width: 68%;
+        height: 300px;
     }
+        #fileBrowser
+        {
+            margin-top: 20px;
+            height: 100%;
+            width: 100%;
+        }
+            #folderSelection
+            {
+                float: left;
+                width: 30%;
+                height:100%;
+            }
+                #folderSelectionExisting
+                {
+                    margin: 0;
+                    padding: 0;
+                }
+                    .folderGraphics
+                    {
+                        margin-left: 5px;
+                    }
+                    .folderGraphics p
+                    {
+                        font-size: 18px;
+                        display: inline;
+                        padding-left: 5px;
+                    }
+                    .folderGraphicsActive
+                    {
+                        background-color: lightcyan;
+                        margin-left: 5px;
+                    }
+                    .folderGraphicsActive p
+                    {
+                        font-size: 18px;
+                        display: inline;
+                        padding-left: 5px;
+                    }
+            #fileSelection
+            {
+                float: right;
+                width: 70%;
+                height:100%;
+            }
 
 #dropzoneUpload
 {
@@ -148,6 +193,6 @@ body
     background-image:url('server_inst_eyes_open.gif');
     background-repeat:no-repeat;
     background-attachment:scroll;
-    background-position: 380px 140px;
+    background-position: 380px 170px;
     background-size: 26%;
 }

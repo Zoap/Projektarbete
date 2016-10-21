@@ -46,10 +46,10 @@
                         processData: false,
                         data: data,
                         success: function (result) {
-                            dragDrop.getElementsByTagName('p')[0].innerText = selectedFile.name + "Uploaded successfully!";
+                            dragDrop.getElementsByTagName('p')[0].innerText = "File successfully!";
+                            uploadSuccessfull();
                         },
                         error: function (result) {
-                            console.log("fail");
                             dragDrop.getElementsByTagName('p')[0].innerText = "Error with upload";
                         }
                     });
@@ -58,6 +58,11 @@
                     dragDrop.getElementsByTagName('p')[0].innerText = "Please select a file";
                 }
             });
+
+            function uploadSuccessfull()
+            {
+                __doPostBack('success', 'uploadSuccess');
+            }
 
             function setHeartbeat() {
                 setTimeout("heartbeat()", 30000);
@@ -97,6 +102,17 @@
             </div>
             <div id="mainContentMyFiles">
                 <p>Upladdade filer</p>
+                <div id="fileBrowser">
+                    <div id="folderSelection">
+                        <p>Existing folders:</p>
+                        <div id="folderSelectionExisting" runat="server">
+                        </div>
+                    </div>
+                    <div id="fileSelection" runat="server">
+
+                    </div>
+
+                </div>
             </div>
         </div>
         </form>
