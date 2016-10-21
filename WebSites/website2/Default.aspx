@@ -37,13 +37,13 @@
                         <tr>
                             <td class="auto-style1">Användarnamn</td>
                             <td>
-                                <asp:TextBox ID="loginUsername" runat="server" BorderStyle="Solid"></asp:TextBox>
+                                <asp:TextBox ID="loginUsername" runat="server" placeholder="Username" BorderStyle="Solid"></asp:TextBox>
                             </td>
                         </tr>
                         <tr>
                             <td class="auto-style1">Lösenord</td>
                             <td>
-                                <asp:TextBox ID="loginPassword" TextMode="password" runat="server" BorderStyle="Solid" OnTextChanged="loginPassword_TextChanged"></asp:TextBox>
+                                <asp:TextBox ID="loginPassword" TextMode="password" runat="server" placeholder="Password" BorderStyle="Solid"></asp:TextBox>
                             </td>
                         </tr>
                         <tr>
@@ -64,19 +64,19 @@
                         <tr>
                             <td class="auto-style2">Användarnamn</td>
                             <td>
-                                <asp:TextBox ID="registrationUsername" runat="server" BorderStyle="Solid"></asp:TextBox>
+                                <asp:TextBox ID="registrationUsername" runat="server" placeholder="Username" BorderStyle="Solid"></asp:TextBox>
                             </td>
                         </tr>
                         <tr>
                             <td class="auto-style2">Lösenord</td>
                             <td>
-                                <asp:TextBox ID="registrationPassword" TextMode="password" runat="server" BorderStyle="Solid" OnTextChanged="registrationPassword_TextChanged"></asp:TextBox>
+                                <asp:TextBox ID="registrationPassword" TextMode="password" runat="server" placeholder="Password" BorderStyle="Solid"></asp:TextBox>
                             </td>
                         </tr>
                         <tr>
                             <td class="auto-style2">Repetera</td>
                             <td>
-                                <asp:TextBox ID="registrationPasswordRepeat" TextMode="password" runat="server" BorderStyle="Solid"></asp:TextBox>
+                                <asp:TextBox ID="registrationPasswordRepeat" TextMode="password" runat="server" placeholder="Password(Repeat)" BorderStyle="Solid"></asp:TextBox>
                             </td>
                         </tr>
                         <tr>

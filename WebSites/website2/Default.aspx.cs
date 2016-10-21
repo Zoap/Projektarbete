@@ -40,14 +40,6 @@ public partial class _Default : System.Web.UI.Page
         handleRegistration(username, password, passwordRepeat);
     }
 
-    protected void loginPassword_TextChanged(object sender, EventArgs e)
-    {
-    }
-
-    protected void registrationPassword_TextChanged(object sender, EventArgs e)
-    {
-    }
-
     private void handleLogin(string username, string password)
     {
         string message = error.login(username, password);
