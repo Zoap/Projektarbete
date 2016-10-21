@@ -4,7 +4,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>test</title>
+    <title>Upload</title>
 	<link rel="stylesheet" type="text/css" href="style.css" />
 
     <!-- JavaScrip -->
@@ -12,7 +12,7 @@
     <script type="text/javascript" src="JavaScript/DropZone.js"></script>
     <script type="text/javascript">
         var selectedFile;
-
+        debugger;
         $(document).ready(function () {
             dragDrop = document.getElementById("dropzoneUpload");
             dragDrop.addEventListener("dragenter", OnDragEnter, false);
@@ -28,7 +28,6 @@
                 e.preventDefault();
             }
             function OnDrop(e) {
-                console.log("Drag drop");
                 e.stopPropagation();
                 e.preventDefault();
                 selectedFile = e.dataTransfer.files[0];
@@ -39,14 +38,16 @@
                 if (selectedFile) {
                     var data = new FormData();
                     data.append(selectedFile.name, selectedFile);
+                    console.log(data);
                     $.ajax({
                         type: "POST",
-                        URL: "/WebHandler/UploadHandler.ashx",
+                        url: "/WebHandler/UploadHandler.ashx",
                         contentType: false,
                         processData: false,
                         data: data,
                         success: function (result) {
-                            dragDrop.getElementsByTagName('p')[0].innerText = selectedFile.name + "Uploaded successfully!";
+                            dragDrop.getElementsByTagName('p')[0].innerText = "File successfully!";
+                            uploadSuccessfull();
                         },
                         error: function (result) {
                             dragDrop.getElementsByTagName('p')[0].innerText = "Error with upload";
@@ -57,6 +58,26 @@
                     dragDrop.getElementsByTagName('p')[0].innerText = "Please select a file";
                 }
             });
+
+            function uploadSuccessfull()
+            {
+                __doPostBack('success', 'uploadSuccess');
+            }
+
+            function setHeartbeat() {
+                setTimeout("heartbeat()", 30000);
+            }
+            function heartbeat() {
+                $.get(
+                    "/WebHandler/SessionHeartbeat.ashx",
+                    null,
+                    function (data) {
+                        setHeartbeat();
+                    },
+                    "json"
+                );
+            }
+
         });
     </script>
     <!--- /JavaScript -->
@@ -81,6 +102,17 @@
             </div>
             <div id="mainContentMyFiles">
                 <p>Upladdade filer</p>
+                <div id="fileBrowser">
+                    <div id="folderSelection">
+                        <p>Existing folders:</p>
+                        <div id="folderSelectionExisting" runat="server">
+                        </div>
+                    </div>
+                    <div id="fileSelection" runat="server">
+
+                    </div>
+
+                </div>
             </div>
         </div>
         </form>
