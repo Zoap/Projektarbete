@@ -54,19 +54,6 @@ public class SQLHandler
         conn.Close();
     }
 
-    //Gör en insert mot filer table i databasen
-    public void upload(string username, string filename, string filepath)
-    {
-        conn.Open();
-        MySqlCommand insert = new MySqlCommand("INSERT INTO filer(username, filename, filepath) VALUES(@username, @filename, @filepath)", conn);
-        insert.Parameters.AddWithValue("@username", username);
-        insert.Parameters.AddWithValue("@filename", filename);
-        insert.Parameters.AddWithValue("@filpath", filepath);
-        insert.ExecuteNonQuery();
-        commit();
-        conn.Close();
-    }
-
     //Kollar om användarnamnet redan finns i user table i databasen
     public bool checkDuplicateUser(string username)
     {
@@ -120,4 +107,53 @@ public class SQLHandler
         MySqlCommand insert = new MySqlCommand("COMMIT", conn);
         insert.ExecuteNonQuery();
     }
+
+    public void FileUpload(UserFile file)
+    {
+        conn.Open();
+        MySqlCommand insert = new MySqlCommand("INSERT INTO files(username, filename, filepath, filesize) " +
+                                                "VALUES(@username, @filename, @filpath, @filesize", conn);
+        insert.Parameters.AddWithValue("@username", file.getUser);
+        insert.Parameters.AddWithValue("@filename", file.getFileName);
+        insert.Parameters.AddWithValue("@filpath", file.getFilePath);
+        insert.Parameters.AddWithValue("@filesize", file.getSizeB);
+        insert.ExecuteNonQuery();
+        commit();
+        conn.Close();
+    }
+
+    public string GetFolders(string username)
+    {
+        string command = string.Format("SELECT folder_id,folder_name FROM folders WHERE owner = '{0}'", username);
+        string[] names = { "folder_id", "folder_name" };
+        string returnData = getQueryResultMultiple(command, names);
+        return returnData;
+    }
+    public string GetUnsorted(string username)
+    {
+        string command = string.Format("SELECT filename,filepath, filesize, upload_time FROM files " +
+                                       "WHERE username = '{0}' AND folder_id = '{1}'", username, "0");
+        string[] names = { "filename", "filepath", "filesize", "upload_time" };
+        string returnData = getQueryResultMultiple(command, names);
+        return returnData;
+    }
+
+    public string GetFiles(string username, int folderID)
+    {
+        string command = string.Format("SELECT filename,filepath, filesize, upload_time FROM files " +
+                                       "WHERE username = '{0}' AND folder_id = '{1}'", username, folderID.ToString());
+        string[] names = { "filename", "filepath", "filesize", "upload_time" };
+        string returnData = getQueryResultMultiple(command, names);
+        return returnData;
+    }
+
+    public void DeleteFile(string username, int folderID, string fileName)
+    {
+        string command = string.Format("DELETE FROM files " +
+            "WHERE username = '{0}' AND folder_id = '{1}' AND filename = '{2}'" +
+            "LIMIT 1", username, folderID, fileName);
+        executeCommand(command);
+    }
 }
+
+
