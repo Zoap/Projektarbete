@@ -108,6 +108,32 @@ public class SQLHandler
         insert.ExecuteNonQuery();
     }
 
+    private string getQueryResultMultiple(string cmd, string[] names)
+    {
+        string returnData = "";
+        MySqlCommand query = new MySqlCommand(cmd, conn);
+        conn.Open();
+        MySqlDataReader sqlReader = query.ExecuteReader();
+        try
+        {
+            while (sqlReader.Read())
+            {
+                if (returnData != "")
+                    returnData += "|";
+                foreach (string name in names)
+                {
+                    returnData += sqlReader[name].ToString() + ",";
+                }
+            }
+        }
+        finally
+        {
+            sqlReader.Close();
+            conn.Close();
+        }
+        return returnData;
+    }
+
     public void FileUpload(UserFile file)
     {
         conn.Open();
@@ -124,35 +150,119 @@ public class SQLHandler
 
     public string GetFolders(string username)
     {
-        string command = string.Format("SELECT folder_id,folder_name FROM folders WHERE owner = '{0}'", username);
+        string returnData = "";
+
+        conn.Open();
+        MySqlCommand select = new MySqlCommand("SELECT folder_id,folder_name FROM folders WHERE owner = @username", conn);
+        select.Parameters.AddWithValue("@username", username);
+
         string[] names = { "folder_id", "folder_name" };
-        string returnData = getQueryResultMultiple(command, names);
+
+        MySqlDataReader sqlReader = select.ExecuteReader();
+
+        try
+        {
+            while (sqlReader.Read())
+            {
+                if (returnData != "")
+                    returnData += "|";
+                foreach (string name in names)
+                {
+                    returnData += sqlReader[name].ToString() + ",";
+                }
+            }
+        }
+        finally
+        {
+            sqlReader.Close();
+            conn.Close();
+        }
+
         return returnData;
     }
     public string GetUnsorted(string username)
     {
-        string command = string.Format("SELECT filename,filepath, filesize, upload_time FROM files " +
-                                       "WHERE username = '{0}' AND folder_id = '{1}'", username, "0");
-        string[] names = { "filename", "filepath", "filesize", "upload_time" };
-        string returnData = getQueryResultMultiple(command, names);
+        string returnData = "";
+
+        conn.Open();
+        MySqlCommand select = new MySqlCommand("SELECT filename,filepath, filesize, upload_time FROM files " +
+                                       "WHERE username = @username AND folder_id = @folder_id'", conn);
+        select.Parameters.AddWithValue("@username", username);
+        select.Parameters.AddWithValue("@folder_id", "0");
+
+        string[] names = { "folder_id", "folder_name" };
+
+        MySqlDataReader sqlReader = select.ExecuteReader();
+
+        try
+        {
+            while (sqlReader.Read())
+            {
+                if (returnData != "")
+                    returnData += "|";
+                foreach (string name in names)
+                {
+                    returnData += sqlReader[name].ToString() + ",";
+                }
+            }
+        }
+        finally
+        {
+            sqlReader.Close();
+            conn.Close();
+        }
+
         return returnData;
     }
 
     public string GetFiles(string username, int folderID)
     {
-        string command = string.Format("SELECT filename,filepath, filesize, upload_time FROM files " +
-                                       "WHERE username = '{0}' AND folder_id = '{1}'", username, folderID.ToString());
+        
+        
+        string returnData = "";
+
+        conn.Open();
+        MySqlCommand select = new MySqlCommand("SELECT filename,filepath, filesize, upload_time FROM files " +
+                                       "WHERE username = @username AND folder_id = @folder_id", conn);
+        select.Parameters.AddWithValue("@username", username);
+        select.Parameters.AddWithValue("@folder_id", folderID.ToString());
+
         string[] names = { "filename", "filepath", "filesize", "upload_time" };
-        string returnData = getQueryResultMultiple(command, names);
+
+        MySqlDataReader sqlReader = select.ExecuteReader();
+
+        try
+        {
+            while (sqlReader.Read())
+            {
+                if (returnData != "")
+                    returnData += "|";
+                foreach (string name in names)
+                {
+                    returnData += sqlReader[name].ToString() + ",";
+                }
+            }
+        }
+        finally
+        {
+            sqlReader.Close();
+            conn.Close();
+        }
+
         return returnData;
+
     }
 
     public void DeleteFile(string username, int folderID, string fileName)
     {
-        string command = string.Format("DELETE FROM files " +
-            "WHERE username = '{0}' AND folder_id = '{1}' AND filename = '{2}'" +
-            "LIMIT 1", username, folderID, fileName);
-        executeCommand(command);
+        conn.Open();
+        MySqlCommand delete = new MySqlCommand("DELETE FROM files WHERE username = @username AND folder_id = @folder_id AND filename = @filename" +
+                                                "LIMIT 1", conn);
+        delete.Parameters.AddWithValue("@username", username);
+        delete.Parameters.AddWithValue("@folder_id", folderID);
+        delete.Parameters.AddWithValue("@filename", fileName);
+        commit();
+        conn.Close();
     }
 }
 
