@@ -29,7 +29,7 @@ public partial class LoggedIN : System.Web.UI.Page
             }
 
         }
-        if(IsPostBack)
+        if (IsPostBack)
         {
             string eArg = Request["__EVENTARGUMENT"];
             if (!string.IsNullOrEmpty(eArg))
@@ -50,7 +50,7 @@ public partial class LoggedIN : System.Web.UI.Page
     {
         folderSelectionExisting.Controls.Clear();
         fileSelection.Style.Add("display", "none");
-        foreach(UserFolder folder in userFolders.Folders.Values)
+        foreach (UserFolder folder in userFolders.Folders.Values)
         {
             HtmlGenericControl folderDiv = new HtmlGenericControl("DIV");
             folderDiv.ID = "folder_" + folder.FolderID;
@@ -74,7 +74,7 @@ public partial class LoggedIN : System.Web.UI.Page
             activeDiv = (HtmlGenericControl)folderSelectionExisting.FindControl(Session["activeFolder"].ToString());
             activeDiv.Attributes["class"] = "folderGraphics";
         }
-        activeDiv = (HtmlGenericControl)folderSelectionExisting.FindControl("folder_"+selectedFolder);
+        activeDiv = (HtmlGenericControl)folderSelectionExisting.FindControl("folder_" + selectedFolder);
         activeDiv.Attributes["class"] = "folderGraphicsActive";
         Session["activeFolder"] = "folder_" + selectedFolder;
 
@@ -91,9 +91,9 @@ public partial class LoggedIN : System.Web.UI.Page
             fileDiv.Attributes.Add("onclick",
             Page.ClientScript.GetPostBackEventReference(fileDiv, fileDiv.ID));
             fileDiv.InnerHtml = "<tr><td>" + file.getFileName
-                              + "</td><td>" + file.getSizeB 
+                              + "</td><td>" + file.getSizeB
                               + "</td><td>" + file.getTimeStamp.Date.ToShortDateString()
-                              + "</td><td><img src='/Images/download.png' height='15' width='15' onclick='__doPostBack(\""+file.getFileName+ "\",\"download_" + file.getFileName+"\")'>" 
+                              + "</td><td><img src='/Images/download.png' height='15' width='15' onclick='__doPostBack(\"" + file.getFileName + "\",\"download_" + file.getFileName + "\")'>"
                               + "</td><td><img src='/Images/delete.png' height='13' width='13' onclick='__doPostBack(\"" + file.getFileName + "\",\"delete_file_" + file.getFileName + "\")'></td></tr>";
             fileSelection.Controls.Add(fileDiv);
         }
@@ -119,7 +119,7 @@ public partial class LoggedIN : System.Web.UI.Page
 
     public void RaisePostBackEvent(string eArg)
     {
-        if(eArg == "uploadSuccess")
+        if (eArg == "uploadSuccess")
         {
             GetUserFiles(Session["Username"].ToString());
         }
@@ -128,19 +128,19 @@ public partial class LoggedIN : System.Web.UI.Page
         {
             getFolderFiles(eArg.Split('_')[1]);
         }
-        else if(senderType == "download")
+        else if (senderType == "download")
         {
             downloadSelectedFile(eArg.Split('_')[1]);
         }
-        else if(senderType == "delete")
+        else if (senderType == "delete")
         {
-            if(eArg.Split('_')[1] == "file")
+            if (eArg.Split('_')[1] == "file")
             {
                 string[] parts = eArg.Split('_').Skip(2).ToArray();
                 string fileName = string.Join("_", parts);
                 deleteSelectedFile(fileName);
             }
-            else if(eArg.Split('_')[1] == "folder")
+            else if (eArg.Split('_')[1] == "folder")
             {
 
             }

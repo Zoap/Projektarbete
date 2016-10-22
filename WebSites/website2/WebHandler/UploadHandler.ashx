@@ -29,11 +29,10 @@ public class Handler : IHttpHandler, IRequiresSessionState {
         context.Response.Write("Handler request successfull.");
     }
 
-    public bool IsReusable
-    {
-        get
-        {
+    public bool IsReusable {
+        get {
             return false;
         }
     }
+
 }

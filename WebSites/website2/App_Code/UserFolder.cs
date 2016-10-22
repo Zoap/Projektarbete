@@ -15,7 +15,7 @@ public class UserFolder
 
     public UserFolder()
     {
-        
+
     }
     public UserFolder(string SQLData, string username)
     {
@@ -28,7 +28,7 @@ public class UserFolder
     private void populateFiles()
     {
         string[] fileData = SQLHandler.GetFiles(userName, folderID).Split('|');
-        if(fileData[0] != "")
+        if (fileData[0] != "")
             foreach (string singleFile in fileData)
             {
                 string[] splitData = singleFile.Split(',');

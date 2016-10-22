@@ -42,20 +42,20 @@ public class UserFile
     {
         get
         {
-            return Math.Round(fileSize/1024, 2);
+            return Math.Round(fileSize / 1024, 2);
         }
     }
     public double getSizeMB
     {
         get
         {
-            return Math.Round((fileSize / 1024)/1024, 2);
+            return Math.Round((fileSize / 1024) / 1024, 2);
         }
     }
 
     public void Delete()
     {
-        if(File.Exists(filePath + fileName))
+        if (File.Exists(filePath + fileName))
         {
             File.Delete(filePath + fileName);
         }

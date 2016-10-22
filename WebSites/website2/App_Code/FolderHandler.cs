@@ -9,7 +9,7 @@ using System.Web;
 public class FolderHandler
 {
     private SQLHandler sqlHandler = new SQLHandler();
-    private Dictionary<int,UserFolder> folderList = new Dictionary<int,UserFolder>();
+    private Dictionary<int, UserFolder> folderList = new Dictionary<int, UserFolder>();
 
     public FolderHandler(string username)
     {
@@ -20,7 +20,7 @@ public class FolderHandler
     private void getFolders(string username)
     {
         string[] folderData = sqlHandler.GetFolders(username).Split('|');
-        foreach(string folderString in folderData)
+        foreach (string folderString in folderData)
         {
             folderList.Add(
                 Int32.Parse(folderString.Split(',')[0]),    //mapp ID
