@@ -20,13 +20,14 @@ public class FolderHandler
     private void GetFolders(string username)
     {
         string[] folderData = sqlHandler.GetFolders(username).Split('|');
-        foreach (string folderString in folderData)
-        {
-            folderList.Add(
-                Int32.Parse(folderString.Split(',')[0]),    //mapp ID
-                new UserFolder(folderString, username)      //mapp objekt
-                );
-        }
+        if(folderData[0] != "")
+            foreach (string folderString in folderData)
+            {
+                folderList.Add(
+                    Int32.Parse(folderString.Split(',')[0]),    //mapp ID
+                    new UserFolder(folderString, username)      //mapp objekt
+                    );
+            }
     }
     private void GetUnsorted(string username)
     {

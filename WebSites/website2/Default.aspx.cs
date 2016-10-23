@@ -48,10 +48,10 @@ public partial class _Default : System.Web.UI.Page
         string message = error.login(userName, password);
 
         //IF session active -> direkt till LoggedIN.aspx
-        Session.Abandon();
         if (error.State)
         {
             //Skapar session
+            Session.Clear();
             Session["Username"] = userName;
             Server.Transfer("LoggedIN.aspx", true);
         }

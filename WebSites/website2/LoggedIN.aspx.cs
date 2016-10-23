@@ -16,6 +16,7 @@ public partial class LoggedIN : System.Web.UI.Page
         //Kollar om Username finns i den aktiva sessionen
         if (String.IsNullOrEmpty((string)Session["Username"]))
         {
+            string test = (string)Session["Username"];
             Server.Transfer("Default.aspx?SessionActive=false", false);
         }
         else
@@ -60,7 +61,10 @@ public partial class LoggedIN : System.Web.UI.Page
             folderDiv.InnerHtml = "<img src='/Images/folder.png' height='15' width='15'><p>" + folder.FolderName + "</p>";
             folderSelectionExisting.Controls.Add(folderDiv);
         }
+        //Välj unsorted
+        GetFolderFiles("0");
     }
+
     protected void GetFolderFiles(string selectedFolder)
     {
 

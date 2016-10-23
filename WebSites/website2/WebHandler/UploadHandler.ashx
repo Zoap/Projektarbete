@@ -13,13 +13,13 @@ public class Handler : IHttpHandler, IRequiresSessionState {
         {
             SqlHandler updateDB = new SqlHandler();
             HttpPostedFile formFile = context.Request.Files[0];
-            string diskPath = "C:/uploads";
-            string fullPath = diskPath + "/" + context.Session["Username"] + "/";
+            string diskPath = "C:/uploads/";
+            string fullPath = diskPath + context.Session["Username"] + "/";
             UserFile file = new UserFile(context.Session["Username"].ToString(), formFile.FileName, fullPath, formFile.ContentLength);
-
+                
             if (!Directory.Exists(diskPath))
                 Directory.CreateDirectory(diskPath);
-            if (Directory.Exists(diskPath + context.Session["Username"]))
+            if (!Directory.Exists(diskPath + context.Session["Username"]))
                 Directory.CreateDirectory(diskPath + context.Session["Username"]);
 
             formFile.SaveAs(file.GetFilePath + file.GetFileName);

@@ -137,12 +137,13 @@ public class SqlHandler
     public void FileUpload(UserFile file)
     {
         conn.Open();
-        MySqlCommand insert = new MySqlCommand("INSERT INTO files(username, filename, filepath, filesize) " +
-                                                "VALUES(@username, @filename, @filpath, @filesize", conn);
+        MySqlCommand insert = new MySqlCommand("INSERT INTO files(username, filename, filepath, filesize, folder_id) " +
+                                                "VALUES(@username, @filename, @filpath, @filesize, @folder_id)", conn);
         insert.Parameters.AddWithValue("@username", file.GetUser);
         insert.Parameters.AddWithValue("@filename", file.GetFileName);
         insert.Parameters.AddWithValue("@filpath", file.GetFilePath);
         insert.Parameters.AddWithValue("@filesize", file.GetSizeB);
+        insert.Parameters.AddWithValue("@folder_id", 0);
         insert.ExecuteNonQuery();
         Commit();
         conn.Close();
@@ -180,44 +181,11 @@ public class SqlHandler
 
         return returnData;
     }
-    public string GetUnsorted(string username)
-    {
-        string returnData = "";
-
-        conn.Open();
-        MySqlCommand select = new MySqlCommand("SELECT filename,filepath, filesize, upload_time FROM files " +
-                                       "WHERE username = @username AND folder_id = @folder_id'", conn);
-        select.Parameters.AddWithValue("@username", username);
-        select.Parameters.AddWithValue("@folder_id", "0");
-
-        string[] names = { "folder_id", "folder_name" };
-
-        MySqlDataReader sqlReader = select.ExecuteReader();
-
-        try
-        {
-            while (sqlReader.Read())
-            {
-                if (returnData != "")
-                    returnData += "|";
-                foreach (string name in names)
-                {
-                    returnData += sqlReader[name].ToString() + ",";
-                }
-            }
-        }
-        finally
-        {
-            sqlReader.Close();
-            conn.Close();
-        }
-
-        return returnData;
-    }
 
     public string GetFiles(string username, int folderID)
     {
         string returnData = "";
+
 
         conn.Open();
         MySqlCommand select = new MySqlCommand("SELECT filename,filepath, filesize, upload_time FROM files " +
