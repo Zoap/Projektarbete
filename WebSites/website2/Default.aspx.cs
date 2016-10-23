@@ -21,6 +21,10 @@ public partial class _Default : System.Web.UI.Page
             leftEventLabel.Visible = true;
         }
 
+        //Redirect om session finns
+        //if(!string.IsNullOrEmpty(Session["Username"].ToString()))
+        //    Server.Transfer("LoggedIN.aspx", true);
+
         loginUsername.Focus();
     }
 
@@ -46,11 +50,10 @@ public partial class _Default : System.Web.UI.Page
     private void HandleLogin(string userName, string password)
     {
         string message = error.login(userName, password);
-
-        //IF session active -> direkt till LoggedIN.aspx
+        
         if (error.State)
         {
-            //Skapar session
+            //Skapar session & tömmer den gamla
             Session.Clear();
             Session["Username"] = userName;
             Server.Transfer("LoggedIN.aspx", true);

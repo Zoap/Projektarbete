@@ -61,7 +61,8 @@ public partial class LoggedIN : System.Web.UI.Page
             folderDiv.InnerHtml = "<img src='/Images/folder.png' height='15' width='15'><p>" + folder.FolderName + "</p>";
             folderSelectionExisting.Controls.Add(folderDiv);
         }
-        //Välj unsorted
+
+        //Mappen "Unsorted" som standard val
         GetFolderFiles("0");
     }
 
@@ -106,7 +107,20 @@ public partial class LoggedIN : System.Web.UI.Page
 
     protected void DownloadSelectedFile(string selectedFile)
     {
-        PopulateFolders();
+        int activeFolderID = Int32.Parse(folderSelectionExisting.FindControl(Session["activeFolder"].ToString()).ID.Split('_')[1]);
+        UserFile fileInfo = userFolders.Folders[activeFolderID].Files.Find(file => file.GetFileName == selectedFile);
+
+        if (File.Exists(fileInfo.GetFilePath + fileInfo.GetFileName))
+        {
+            Response.Clear();
+            Response.ClearHeaders();
+            Response.ClearContent();
+            Response.AddHeader("Content-Disposition", "attachment; filename=" + fileInfo.GetFileName);
+            Response.AddHeader("Content-Length", fileInfo.GetSizeB.ToString());
+            Response.ContentType = "text/plain";
+            Response.TransmitFile(fileInfo.GetFilePath + fileInfo.GetFileName);
+            Response.End();
+        }
     }
     protected void DeleteSelectedFile(string selectedFile)
     {
@@ -122,28 +136,33 @@ public partial class LoggedIN : System.Web.UI.Page
 
     public void RaisePostBackEvent(string eArg)
     {
+        //Uppladdnings event
         if (eArg == "uploadSuccess")
         {
             GetUserFiles(Session["Username"].ToString());
         }
+
+        //Click evnent i filhanteraren
         string senderType = eArg.Split('_')[0];
-        if (senderType == "folder")
+        if (senderType == "folder") //Val av mapp
         {
             GetFolderFiles(eArg.Split('_')[1]);
         }
-        else if (senderType == "download")
+        else if (senderType == "download") //Ladda ner en fil
         {
-            DownloadSelectedFile(eArg.Split('_')[1]);
+            string[] parts = eArg.Split('_').Skip(1).ToArray();
+            string fileName = string.Join("_", parts);
+            DownloadSelectedFile(fileName);
         }
-        else if (senderType == "delete")
+        else if (senderType == "delete")    //Borttag -
         {
-            if (eArg.Split('_')[1] == "file")
+            if (eArg.Split('_')[1] == "file") // - av fil
             {
                 string[] parts = eArg.Split('_').Skip(2).ToArray();
                 string fileName = string.Join("_", parts);
                 DeleteSelectedFile(fileName);
             }
-            else if (eArg.Split('_')[1] == "folder")
+            else if (eArg.Split('_')[1] == "folder") // - av mapp
             {
 
             }
