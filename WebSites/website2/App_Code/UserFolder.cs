@@ -8,7 +8,7 @@ using System.Web;
 /// </summary>
 public class UserFolder
 {
-    SQLHandler SQLHandler = new SQLHandler();
+    SqlHandler SQLHandler = new SqlHandler();
     private List<UserFile> uFiles = new List<UserFile>();
     private string userName, folderName;
     private int folderID;
@@ -22,10 +22,10 @@ public class UserFolder
         userName = username;
         folderID = Int32.Parse(SQLData.Split(',')[0]);
         folderName = SQLData.Split(',')[1];
-        populateFiles();
+        PopulateFiles();
     }
 
-    private void populateFiles()
+    private void PopulateFiles()
     {
         string[] fileData = SQLHandler.GetFiles(userName, folderID).Split('|');
         if (fileData[0] != "")

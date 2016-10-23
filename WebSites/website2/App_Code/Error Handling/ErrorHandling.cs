@@ -6,20 +6,21 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Text;
+using System.Text.RegularExpressions;
 
 /// <summary>
 /// Summary description for ErrorHandling
 /// </summary>
 public class ErrorHandling
 {
-    private SQLHandler sql = new SQLHandler();
+    private SqlHandler sql = new SqlHandler();
 
     private string red = "leftEventLabelFail";
     private string green = "leftEventLabelSuccess";
 
     //styr vilken css klass label skall anta
     private string _color = string.Empty;
-    public string color
+    public string Color
     {
         get
         {
@@ -29,7 +30,7 @@ public class ErrorHandling
 
     //Används som variabel utanför ErrorHandling för att kolla om fel upptäckts
     private bool _state = false;
-    public bool state
+    public bool State
     {
         get
         {
@@ -42,7 +43,7 @@ public class ErrorHandling
     }
 
     //Kollar username efter andra tecken än 0-9, A-Z, a-z
-    private bool checkUsername(string un)
+    private bool CheckUsername(string un)
     {
         bool check = true;
 
@@ -58,7 +59,23 @@ public class ErrorHandling
         return check;
     }
 
-    private bool checkPassword(string password)
+    private bool CheckEmail(string email)
+    {
+        bool check;
+
+        if (Regex.IsMatch(email, @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*" + "@" + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$"))
+        {
+            check = true;
+        }
+        else
+        {
+            check = false;
+        }
+
+        return check;
+    }
+
+    private bool CheckPassword(string password)
     {
         bool check = true;
         int upper = 0;
@@ -103,19 +120,19 @@ public class ErrorHandling
     }
 
     //Felhantering i registreringsfasen
-    public string registration(string username, string email, string password, string passwordRepeat)
+    public string Registration(string username, string email, string password, string passwordRepeat)
     {
         string message;
 
         //Lite felhantering (borde kollas efter specifika chars osv.) orkarde inte regex
         if (!string.IsNullOrEmpty(username))
         {
-            if (!checkUsername(username))
+            if (!CheckUsername(username))
             {
                 message = "*Användarnamnet får endast innehålla karaktärerna 0-9, A-Z, a-z";
                 _color = red;
             }
-            else if (sql.checkDuplicateUser(username))
+            else if (!sql.CheckDuplicateUser(username))
             {
                 message = "*Användarnamnet är upptaget";
                 _color = red;
@@ -126,12 +143,17 @@ public class ErrorHandling
                 message = "*En E-mailadress måste anges";
                 _color = red;
             }
-            else if (sql.checkDuplicateEmail(email))
+            else if (!sql.CheckDuplicateEmail(email))
             {
                 message = "*E-mail adressen är redan knutet till ett konto";
                 _color = red;
             }
-            else if (!checkPassword(password))
+            else if (!CheckEmail(email))
+            {
+                message = "*E-mail adressen är inte giltig";
+                _color = red;
+            }
+            else if (!CheckPassword(password))
             {
                 message = "*Lösenordet måste vara minst 6 tecken långt, innehålla minst en versal, en siffra och ett av följande tecken: ] [ ? / < ~ # ` ! @ $ % ^ & * ( ) + = } | : \" ; ' , > { space";
                 _color = red;
@@ -166,7 +188,7 @@ public class ErrorHandling
     {
         string message = string.Empty;
 
-        if (sql.login(username, password))
+        if (sql.Login(username, password))
         {
             _state = true;
         }

@@ -9,7 +9,7 @@ using System.Text;
 
 public partial class _Default : System.Web.UI.Page
 {
-    private SQLHandler sql = new SQLHandler();
+    private SqlHandler sql = new SqlHandler();
     private ErrorHandling error = new ErrorHandling();
 
     protected void Page_Load(object sender, EventArgs e)
@@ -29,7 +29,7 @@ public partial class _Default : System.Web.UI.Page
         string username = loginUsername.Text;
         string password = loginPassword.Text;
 
-        handleLogin(username, password);
+        HandleLogin(username, password);
     }
 
     protected void btnRegistration_Click(object sender, EventArgs e)
@@ -40,43 +40,43 @@ public partial class _Default : System.Web.UI.Page
         string password = registrationPassword.Text;
         string passwordRepeat = registrationPasswordRepeat.Text;
 
-        handleRegistration(username, email, password, passwordRepeat);
+        HandleRegistration(username, email, password, passwordRepeat);
     }
 
-    private void handleLogin(string username, string password)
+    private void HandleLogin(string userName, string password)
     {
-        string message = error.login(username, password);
+        string message = error.login(userName, password);
 
         //IF session active -> direkt till LoggedIN.aspx
         Session.Abandon();
-        if (error.state)
+        if (error.State)
         {
             //Skapar session
-            Session["Username"] = username;
+            Session["Username"] = userName;
             Server.Transfer("LoggedIN.aspx", true);
         }
         else
         {
             registrationUsername.Text = string.Empty;
             leftEventLabel.Text = message;
-            leftEventLabel.CssClass = error.color;
+            leftEventLabel.CssClass = error.Color;
             rightEventLabel.Visible = false;
             leftEventLabel.Visible = true;
         }
     }
 
-    private void handleRegistration(string username, string email, string password, string passwordRepeat)
+    private void HandleRegistration(string userName, string email, string password, string passwordRepeat)
     {
-        string message = error.registration(username, email,  password, passwordRepeat);
+        string message = error.Registration(userName, email,  password, passwordRepeat);
 
-        if (error.state)
+        if (error.State)
         {
-            sql.Register(username, email, password);
+            sql.Register(userName, email, password);
         }
 
         loginUsername.Text = string.Empty;
         rightEventLabel.Text = message;
-        rightEventLabel.CssClass = error.color;
+        rightEventLabel.CssClass = error.Color;
         leftEventLabel.Visible = false;
         rightEventLabel.Visible = true;
     }

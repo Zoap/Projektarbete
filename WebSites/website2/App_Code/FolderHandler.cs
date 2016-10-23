@@ -8,16 +8,16 @@ using System.Web;
 /// </summary>
 public class FolderHandler
 {
-    private SQLHandler sqlHandler = new SQLHandler();
+    private SqlHandler sqlHandler = new SqlHandler();
     private Dictionary<int, UserFolder> folderList = new Dictionary<int, UserFolder>();
 
     public FolderHandler(string username)
     {
-        getFolders(username);
-        getUnsorted(username);
+        GetFolders(username);
+        GetUnsorted(username);
     }
 
-    private void getFolders(string username)
+    private void GetFolders(string username)
     {
         string[] folderData = sqlHandler.GetFolders(username).Split('|');
         foreach (string folderString in folderData)
@@ -28,7 +28,7 @@ public class FolderHandler
                 );
         }
     }
-    private void getUnsorted(string username)
+    private void GetUnsorted(string username)
     {
         string folderInfo = "0,Unsorted";
         folderList.Add(0, new UserFolder(folderInfo, username));

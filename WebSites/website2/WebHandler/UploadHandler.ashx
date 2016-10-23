@@ -11,7 +11,7 @@ public class Handler : IHttpHandler, IRequiresSessionState {
     {
         if (context.Request.Files.Count > 0)
         {
-            SQLHandler updateDB = new SQLHandler();
+            SqlHandler updateDB = new SqlHandler();
             HttpPostedFile formFile = context.Request.Files[0];
             string diskPath = "C:/uploads";
             string fullPath = diskPath + "/" + context.Session["Username"] + "/";
@@ -22,7 +22,7 @@ public class Handler : IHttpHandler, IRequiresSessionState {
             if (Directory.Exists(diskPath + context.Session["Username"]))
                 Directory.CreateDirectory(diskPath + context.Session["Username"]);
 
-            formFile.SaveAs(file.getFilePath + file.getFileName);
+            formFile.SaveAs(file.GetFilePath + file.GetFileName);
             updateDB.FileUpload(file);
         }
         context.Response.ContentType = "text/plain";

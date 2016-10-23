@@ -7,17 +7,17 @@ using MySql.Data.MySqlClient;
 /// <summary>
 /// Summary description for Class1
 /// </summary>
-public class SQLHandler
+public class SqlHandler
 {
     //Skapar en ny anslutning mot databasen
     private MySqlConnection conn = new MySqlConnection(@"server=localhost;userid=root;password=rootpassword;database=projekt;");
 
-    public SQLHandler()
+    public SqlHandler()
     {
     }
 
     //Kollar user table i databasen efter angivet användarnamn och lösenord
-    public bool login(string username, string password)
+    public bool Login(string username, string password)
     {
         bool check;
         int count;
@@ -50,12 +50,12 @@ public class SQLHandler
         insert.Parameters.AddWithValue("@password", password);
         insert.Parameters.AddWithValue("@email", email);
         insert.ExecuteNonQuery();
-        commit();
+        Commit();
         conn.Close();
     }
 
     //Kollar om användarnamnet redan finns i user table i databasen
-    public bool checkDuplicateUser(string username)
+    public bool CheckDuplicateUser(string username)
     {
         bool check;
         int count;
@@ -68,17 +68,17 @@ public class SQLHandler
 
         if (count >= 1)
         {
-            check = true;
+            check = false;
         }
         else
         {
-            check = false;
+            check = true;
         }
 
         return check;
     }
 
-    public bool checkDuplicateEmail(string email)
+    public bool CheckDuplicateEmail(string email)
     {
         bool check;
         int count;
@@ -91,24 +91,24 @@ public class SQLHandler
 
         if (count >= 1)
         {
-            check = true;
+            check = false;
         }
         else
         {
-            check = false;
+            check = true;
         }
 
         return check;
     }
 
     //Utför en commit mot databasen
-    private void commit()
+    private void Commit()
     {
         MySqlCommand insert = new MySqlCommand("COMMIT", conn);
         insert.ExecuteNonQuery();
     }
 
-    private string getQueryResultMultiple(string cmd, string[] names)
+    private string GetQueryResultMultiple(string cmd, string[] names)
     {
         string returnData = "";
         MySqlCommand query = new MySqlCommand(cmd, conn);
@@ -139,12 +139,12 @@ public class SQLHandler
         conn.Open();
         MySqlCommand insert = new MySqlCommand("INSERT INTO files(username, filename, filepath, filesize) " +
                                                 "VALUES(@username, @filename, @filpath, @filesize", conn);
-        insert.Parameters.AddWithValue("@username", file.getUser);
-        insert.Parameters.AddWithValue("@filename", file.getFileName);
-        insert.Parameters.AddWithValue("@filpath", file.getFilePath);
-        insert.Parameters.AddWithValue("@filesize", file.getSizeB);
+        insert.Parameters.AddWithValue("@username", file.GetUser);
+        insert.Parameters.AddWithValue("@filename", file.GetFileName);
+        insert.Parameters.AddWithValue("@filpath", file.GetFilePath);
+        insert.Parameters.AddWithValue("@filesize", file.GetSizeB);
         insert.ExecuteNonQuery();
-        commit();
+        Commit();
         conn.Close();
     }
 
@@ -217,8 +217,6 @@ public class SQLHandler
 
     public string GetFiles(string username, int folderID)
     {
-        
-        
         string returnData = "";
 
         conn.Open();
@@ -250,7 +248,6 @@ public class SQLHandler
         }
 
         return returnData;
-
     }
 
     public void DeleteFile(string username, int folderID, string fileName)
@@ -261,9 +258,7 @@ public class SQLHandler
         delete.Parameters.AddWithValue("@username", username);
         delete.Parameters.AddWithValue("@folder_id", folderID);
         delete.Parameters.AddWithValue("@filename", fileName);
-        commit();
+        Commit();
         conn.Close();
     }
 }
-
-

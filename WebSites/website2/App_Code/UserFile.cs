@@ -33,19 +33,19 @@ public class UserFile
         timeStamp = dateTime;
     }
 
-    public DateTime getTimeStamp { get { return timeStamp; } }
-    public string getUser { get { return username; } }
-    public string getFileName { get { return fileName; } }
-    public string getFilePath { get { return filePath; } }
-    public int getSizeB { get { return (int)fileSize; } }
-    public double getSizeKB
+    public DateTime GetTimeStamp { get { return timeStamp; } }
+    public string GetUser { get { return username; } }
+    public string GetFileName { get { return fileName; } }
+    public string GetFilePath { get { return filePath; } }
+    public int GetSizeB { get { return (int)fileSize; } }
+    public double GetSizeKB
     {
         get
         {
             return Math.Round(fileSize / 1024, 2);
         }
     }
-    public double getSizeMB
+    public double GetSizeMB
     {
         get
         {

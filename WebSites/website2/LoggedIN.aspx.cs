@@ -25,7 +25,7 @@ public partial class LoggedIN : System.Web.UI.Page
             else
             {
                 userFolders = (FolderHandler)Session["userFolders"];
-                populateFolders();
+                PopulateFolders();
             }
 
         }
@@ -43,10 +43,10 @@ public partial class LoggedIN : System.Web.UI.Page
     private void GetUserFiles(string user)
     {
         userFolders = new FolderHandler(user);
-        populateFolders();
+        PopulateFolders();
         Session["userFolders"] = userFolders;
     }
-    private void populateFolders()
+    private void PopulateFolders()
     {
         folderSelectionExisting.Controls.Clear();
         fileSelection.Style.Add("display", "none");
@@ -61,7 +61,7 @@ public partial class LoggedIN : System.Web.UI.Page
             folderSelectionExisting.Controls.Add(folderDiv);
         }
     }
-    protected void getFolderFiles(string selectedFolder)
+    protected void GetFolderFiles(string selectedFolder)
     {
 
         int folderKey = Int32.Parse(selectedFolder);
@@ -86,32 +86,31 @@ public partial class LoggedIN : System.Web.UI.Page
         foreach (UserFile file in userFolders.Folders[folderKey].Files)
         {
             HtmlGenericControl fileDiv = new HtmlGenericControl("DIV");
-            fileDiv.ID = "file_" + file.getFileName;
+            fileDiv.ID = "file_" + file.GetFileName;
             fileDiv.Attributes["class"] = "fileGraphics";
             fileDiv.Attributes.Add("onclick",
             Page.ClientScript.GetPostBackEventReference(fileDiv, fileDiv.ID));
-            fileDiv.InnerHtml = "<tr><td>" + file.getFileName
-                              + "</td><td>" + file.getSizeB
-                              + "</td><td>" + file.getTimeStamp.Date.ToShortDateString()
-                              + "</td><td><img src='/Images/download.png' height='15' width='15' onclick='__doPostBack(\"" + file.getFileName + "\",\"download_" + file.getFileName + "\")'>"
-                              + "</td><td><img src='/Images/delete.png' height='13' width='13' onclick='__doPostBack(\"" + file.getFileName + "\",\"delete_file_" + file.getFileName + "\")'></td></tr>";
+            fileDiv.InnerHtml = "<tr><td>" + file.GetFileName
+                              + "</td><td>" + file.GetSizeB
+                              + "</td><td>" + file.GetTimeStamp.Date.ToShortDateString()
+                              + "</td><td><img src='/Images/download.png' height='15' width='15' onclick='__doPostBack(\"" + file.GetFileName + "\",\"download_" + file.GetFileName + "\")'>"
+                              + "</td><td><img src='/Images/delete.png' height='13' width='13' onclick='__doPostBack(\"" + file.GetFileName + "\",\"delete_file_" + file.GetFileName + "\")'></td></tr>";
             fileSelection.Controls.Add(fileDiv);
         }
 
     }
 
-    protected void downloadSelectedFile(string selectedFile)
+    protected void DownloadSelectedFile(string selectedFile)
     {
-
-        populateFolders();
+        PopulateFolders();
     }
-    protected void deleteSelectedFile(string selectedFile)
+    protected void DeleteSelectedFile(string selectedFile)
     {
         int activeFolderID = Int32.Parse(folderSelectionExisting.FindControl(Session["activeFolder"].ToString()).ID.Split('_')[1]);
-        UserFile fileToDelete = userFolders.Folders[activeFolderID].Files.Find(file => file.getFileName == selectedFile);
+        UserFile fileToDelete = userFolders.Folders[activeFolderID].Files.Find(file => file.GetFileName == selectedFile);
 
-        SQLHandler sqlHandler = new SQLHandler();
-        sqlHandler.DeleteFile(Session["Username"].ToString(), activeFolderID, fileToDelete.getFileName);
+        SqlHandler sqlHandler = new SqlHandler();
+        sqlHandler.DeleteFile(Session["Username"].ToString(), activeFolderID, fileToDelete.GetFileName);
         fileToDelete.Delete();
 
         GetUserFiles(Session["Username"].ToString());
@@ -126,11 +125,11 @@ public partial class LoggedIN : System.Web.UI.Page
         string senderType = eArg.Split('_')[0];
         if (senderType == "folder")
         {
-            getFolderFiles(eArg.Split('_')[1]);
+            GetFolderFiles(eArg.Split('_')[1]);
         }
         else if (senderType == "download")
         {
-            downloadSelectedFile(eArg.Split('_')[1]);
+            DownloadSelectedFile(eArg.Split('_')[1]);
         }
         else if (senderType == "delete")
         {
@@ -138,7 +137,7 @@ public partial class LoggedIN : System.Web.UI.Page
             {
                 string[] parts = eArg.Split('_').Skip(2).ToArray();
                 string fileName = string.Join("_", parts);
-                deleteSelectedFile(fileName);
+                DeleteSelectedFile(fileName);
             }
             else if (eArg.Split('_')[1] == "folder")
             {
