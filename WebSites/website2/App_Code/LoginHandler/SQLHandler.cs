@@ -222,10 +222,11 @@ public class SqlHandler
     {
         conn.Open();
         MySqlCommand delete = new MySqlCommand("DELETE FROM files WHERE username = @username AND folder_id = @folder_id AND filename = @filename" +
-                                                "LIMIT 1", conn);
+                                                " LIMIT 1", conn);
         delete.Parameters.AddWithValue("@username", username);
         delete.Parameters.AddWithValue("@folder_id", folderID);
         delete.Parameters.AddWithValue("@filename", fileName);
+        delete.ExecuteNonQuery();
         Commit();
         conn.Close();
     }
