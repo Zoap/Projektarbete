@@ -4,30 +4,36 @@ using System.Linq;
 using System.Web;
 
 /// <summary>
-/// Användarens mappar
+/// Hanteraren för användarens mappar.
 /// </summary>
 public class UserFolder
 {
-    SqlHandler SQLHandler = new SqlHandler();
-    private List<UserFile> uFiles = new List<UserFile>();
-    private string userName, folderName;
-    private int folderID;
-
-    public UserFolder()
-    {
-
-    }
+    private SqlHandler _SQLHandler = new SqlHandler();
+    private List<UserFile> _uFiles = new List<UserFile>();
+    private string _userName, _folderName;
+    private int _folderID;
+    
+    /// <summary>
+    /// Skapar en instans av mappen och splittar SQLData in i korrekta variabler.
+    /// Kallar sedan på metoden populateFiles för att hämta filerna som tillhör mappen.
+    /// </summary>
+    /// <param name="SQLData">Datan som SQLHandler returnerade vid mapp hämtningen</param>
+    /// <param name="username">Den aktiva användaren</param>
     public UserFolder(string SQLData, string username)
     {
-        userName = username;
-        folderID = Int32.Parse(SQLData.Split(',')[0]);
-        folderName = SQLData.Split(',')[1];
-        PopulateFiles();
+        _userName = username;
+        _folderID = Int32.Parse(SQLData.Split(',')[0]);
+        _folderName = SQLData.Split(',')[1];
+        populateFiles();
     }
 
-    private void PopulateFiles()
+    /// <summary>
+    /// Kallar på SQLHandler för att hämta och bearbeta data för filerna som tillhör mappen.
+    /// Skapar sedan en UserFile instans och lägger till det i _uFiles listan
+    /// </summary>
+    private void populateFiles()
     {
-        string[] fileData = SQLHandler.GetFiles(userName, folderID).Split('|');
+        string[] fileData = _SQLHandler.GetFiles(_userName, _folderID).Split('|');
         if (fileData[0] != "")
             foreach (string singleFile in fileData)
             {
@@ -37,11 +43,20 @@ public class UserFolder
                 int fileSize = Int32.Parse(splitData[2]);
                 DateTime time = DateTime.Parse(splitData[3]);
 
-                uFiles.Add(new UserFile(userName, fileName, filePath, fileSize, time));
+                _uFiles.Add(new UserFile(_userName, fileName, filePath, fileSize, time));
             }
     }
 
-    public string FolderName { get { return folderName; } }
-    public int FolderID { get { return folderID; } }
-    public List<UserFile> Files { get { return uFiles; } }
+    /// <summary>
+    /// Returnerare namnet på mappen
+    /// </summary>
+    public string FolderName { get { return _folderName; } }
+    /// <summary>
+    /// Returnerar ID på mappen
+    /// </summary>
+    public int FolderID { get { return _folderID; } }
+    /// <summary>
+    /// Returnerar listan med filer
+    /// </summary>
+    public List<UserFile> Files { get { return _uFiles; } }
 }

@@ -5,59 +5,97 @@ using System.Web;
 using System.IO;
 
 /// <summary>
-/// Denna klassen skapar fil objekt för hantering av data i programmet.
-/// Objekten används för att spara ner filer & hitta rätt data i SQL.
+/// Denna klassen håller relevant information om filerna för hantering i användarens filträd.
 /// </summary>
 public class UserFile
 {
     //Filinformation
-    private string username, fileName, filePath;
-    private double fileSize;
-    private DateTime timeStamp;
-
+    private string _username, _fileName, _filePath;
+    private double _fileSize;
+    private DateTime _timeStamp;
+    
     public UserFile() { }
+    /// <summary>
+    /// Konstruktorn som används vid uppladdning av filer.
+    /// </summary>
+    /// <param name="username">Användaren som laddar upp</param>
+    /// <param name="fileName">Namnet på filen</param>
+    /// <param name="filePath">Var filen lagras</param>
+    /// <param name="fileSizeBytes">Filens storlek i bytes</param>
     public UserFile(string username, string fileName, string filePath, int fileSizeBytes)
     {
-        this.username = username;
-        this.fileName = fileName;
-        this.filePath = filePath;
-        fileSize = fileSizeBytes;
-        timeStamp = DateTime.Now;
+        this._username = username;
+        this._fileName = fileName;
+        this._filePath = filePath;
+        _fileSize = fileSizeBytes;
+        _timeStamp = DateTime.Now;
     }
+    /// <summary>
+    /// Konstruktorn som används när FolderHandlern skapas för visning i filträdet.
+    /// </summary>
+    /// <param name="username">Ägaren av filen</param>
+    /// <param name="fileName">Filnamnet</param>
+    /// <param name="filePath">Var filen är</param>
+    /// <param name="fileSizeBytes">Filens storlek i bytes</param>
+    /// <param name="dateTime">När filen blev tilladg i MySQL</param>
     public UserFile(string username, string fileName, string filePath, int fileSizeBytes, DateTime dateTime)
     {
-        this.username = username;
-        this.fileName = fileName;
-        this.filePath = filePath;
-        fileSize = fileSizeBytes;
-        timeStamp = dateTime;
+        this._username = username;
+        this._fileName = fileName;
+        this._filePath = filePath;
+        _fileSize = fileSizeBytes;
+        _timeStamp = dateTime;
     }
 
-    public DateTime GetTimeStamp { get { return timeStamp; } }
-    public string GetUser { get { return username; } }
-    public string GetFileName { get { return fileName; } }
-    public string GetFilePath { get { return filePath; } }
-    public int GetSizeB { get { return (int)fileSize; } }
+    /// <summary>
+    /// Returnerar timestampen från MySQL DB:n
+    /// </summary>
+    public DateTime GetTimeStamp { get { return _timeStamp; } }
+    /// <summary>
+    /// Returnerar ägaren av filen
+    /// </summary>
+    public string GetUser { get { return _username; } }
+    /// <summary>
+    /// Returnerare filens namn
+    /// </summary>
+    public string GetFileName { get { return _fileName; } }
+    /// <summary>
+    /// Returnerare vägen till filen
+    /// </summary>
+    public string GetFilePath { get { return _filePath; } }
+    /// <summary>
+    /// Returnerare filens storlek i bytes
+    /// </summary>
+    public int GetSizeB { get { return (int)_fileSize; } }
+    /// <summary>
+    /// Returnerar filens storlek i kilo bytes
+    /// </summary>
     public double GetSizeKB
     {
         get
         {
-            return Math.Round(fileSize / 1024, 2);
+            return Math.Round(_fileSize / 1024, 2);
         }
     }
+    /// <summary>
+    /// Returnerar filens storlek i mega bytes
+    /// </summary>
     public double GetSizeMB
     {
         get
         {
-            return Math.Round((fileSize / 1024) / 1024, 2);
+            return Math.Round((_fileSize / 1024) / 1024, 2);
         }
     }
 
+    /// <summary>
+    /// Raderar den fysiska filen om den finns på disken
+    /// </summary>
     public void Delete()
     {
-        if (File.Exists(filePath + fileName))
+        if (File.Exists(_filePath + _fileName))
         {
-            File.Delete(filePath + fileName);
+            File.Delete(_filePath + _fileName);
         }
     }
 }

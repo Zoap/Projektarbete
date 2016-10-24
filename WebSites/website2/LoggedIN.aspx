@@ -12,21 +12,24 @@
     <script type="text/javascript" src="JavaScript/DropZone.js"></script>
     <script type="text/javascript">
         var selectedFile;
-        debugger;
         $(document).ready(function () {
+            //Lägger till event på diven dropzoneUpload
             dragDrop = document.getElementById("dropzoneUpload");
             dragDrop.addEventListener("dragenter", OnDragEnter, false);
             dragDrop.addEventListener("dragover", OnDragOver, false);
             dragDrop.addEventListener("drop", OnDrop, false);
 
+            //Inget händer när något dras till dropzoneUpload
             function OnDragEnter(e) {
                 e.stopPropagation();
                 e.preventDefault();
             }
+            //Inget händer när något dras över dropzoneUpload
             function OnDragOver(e) {
                 e.stopPropagation();
                 e.preventDefault();
             }
+            //Sparar informationen av objektet som släpps på dropzoneUpload
             function OnDrop(e) {
                 e.stopPropagation();
                 e.preventDefault();
@@ -34,36 +37,45 @@
                 dragDrop.getElementsByTagName('p')[0].innerText = "Selected file: " + selectedFile.name;
             }
 
+            //Eventet som körs när man klickar på btnUpload
             $("#btnUpload").click(function () {
+                //Kollar om selectedFile innehåller någon data.
                 if (selectedFile) {
+                    //Skapar ett objekt av FromData
                     var data = new FormData();
+                    //Lägger till information om filen i objektet data
                     data.append(selectedFile.name, selectedFile);
-                    console.log(data);
+                    //Gör en POST request till UploadHandler.ashx
                     $.ajax({
                         type: "POST",
                         url: "/WebHandler/UploadHandler.ashx",
                         contentType: false,
                         processData: false,
                         data: data,
+                        //Funktionen som körs om requesten kördes utan problem
                         success: function (result) {
                             dragDrop.getElementsByTagName('p')[0].innerText = "File successfully!";
                             uploadSuccessfull();
                         },
+                        //Funktionen som körs om requesten kördes med problem
                         error: function (result) {
                             dragDrop.getElementsByTagName('p')[0].innerText = "Error with upload";
                         }
                     });
                 }
+                //Om selectedFile inte innehåller någon data skrivs ett felmeddelande ut.
                 else {
                     dragDrop.getElementsByTagName('p')[0].innerText = "Please select a file";
                 }
             });
 
+            //Gör ett postback event
             function uploadSuccessfull()
             {
                 __doPostBack('success', 'uploadSuccess');
             }
 
+            //Sätter timeout på sessionen på 5 minuter om användaren är på sidan
             function setHeartbeat() {
                 setTimeout("heartbeat()", 30000);
             }
@@ -91,14 +103,12 @@
         <div id="mainContent">
             <div id="mainContentUpload">
 			    <p>För att ladda upp en fil</p>
-
-                    <div id="dropzoneUpload">
-                        <center>
-                            <input type="button" id="btnUpload" value="Upload file" />
-                            <p>Drag & Drop</p>
-                        </center>
-                    </div>
-
+                <div id="dropzoneUpload">
+                    <center>
+                        <input type="button" id="btnUpload" value="Upload file" />
+                        <p>Drag & Drop</p>
+                    </center>
+                </div>
             </div>
             <div id="mainContentMyFiles">
                 <p>Upladdade filer</p>
