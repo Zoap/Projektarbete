@@ -11,7 +11,7 @@ using System.Web.UI;
 /// </summary>
 public class Handler : IHttpHandler, IRequiresSessionState
 {
-    ErrorHandling error = new ErrorHandling();
+    private ErrorHandling error = new ErrorHandling();
 
     public void ProcessRequest (HttpContext context)
     {
@@ -27,17 +27,27 @@ public class Handler : IHttpHandler, IRequiresSessionState
             {
                 Directory.CreateDirectory(diskPath);
             }
-            
+
             if (!Directory.Exists(diskPath + context.Session["Username"]))
             {
                 Directory.CreateDirectory(diskPath + context.Session["Username"]);
             }
 
+            error.Upload(file);
 
-            formFile.SaveAs(file.GetFilePath + file.GetFileName);
-            updateDB.FileUpload(file);
+            if (error.State)
+            {
+                context.Session["message"] = null;
+                context.Session["color"] = null;
+                formFile.SaveAs(file.GetFilePath + file.GetFileName);
+                updateDB.FileUpload(file);
+            }
+            else
+            {
+                context.Session["message"] = error.Message;
+                context.Session["color"] = error.Color;
+            }
         }
-
         context.Response.ContentType = "text/plain";
         context.Response.Write("Handler request successfull.");
     }

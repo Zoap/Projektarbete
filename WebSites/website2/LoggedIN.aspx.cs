@@ -11,25 +11,32 @@ using System.IO;
 public partial class LoggedIN : System.Web.UI.Page
 {
     private FolderHandler _userFolders;
+
     protected void Page_Load(object sender, EventArgs e)
     {
+        leftEventLabel.Visible = false;
+
         //Kollar om Username finns i den aktiva sessionen
         if (String.IsNullOrEmpty((string)Session["Username"]))
         {
             string test = (string)Session["Username"];
+
             Server.Transfer("Default.aspx?SessionActive=false", false);
         }
         else
         {
             if (Session["userFolders"] == null)
+            {
                 getUserFiles(Session["Username"].ToString());
+            } 
             else
             {
                 _userFolders = (FolderHandler)Session["userFolders"];
                 populateFolders();
             }
-
         }
+
+
         if (IsPostBack)
         {
             string eArg = Request["__EVENTARGUMENT"];
@@ -38,7 +45,12 @@ public partial class LoggedIN : System.Web.UI.Page
                 RaisePostBackEvent(eArg);
             }
         }
-
+        if (!string.IsNullOrEmpty((string)Session["message"]))
+        {
+            leftEventLabel.CssClass = (string)Session["color"];
+            leftEventLabel.Text = (string)Session["message"];
+            leftEventLabel.Visible = true;
+        }  
     }
 
     private void getUserFiles(string user)
@@ -68,7 +80,6 @@ public partial class LoggedIN : System.Web.UI.Page
 
     protected void GetFolderFiles(string selectedFolder)
     {
-
         int folderKey = Int32.Parse(selectedFolder);
 
         //Grafik fix
@@ -147,6 +158,7 @@ public partial class LoggedIN : System.Web.UI.Page
             //Mappen finns redan
         }
         getUserFiles(Session["Username"].ToString());
+        createFolderName.Text = string.Empty;
     }
 
     public void RaisePostBackEvent(string eArg)
@@ -155,10 +167,13 @@ public partial class LoggedIN : System.Web.UI.Page
         if (eArg == "uploadSuccess")
         {
             getUserFiles(Session["Username"].ToString());
-        }
 
-        //Click evnent i filhanteraren
+            leftEventLabel.Visible = false;
+        }
+            
+        //Click event i filhanteraren
         string senderType = eArg.Split('_')[0];
+
         if (senderType == "folder") //Val av mapp
         {
             GetFolderFiles(eArg.Split('_')[1]);

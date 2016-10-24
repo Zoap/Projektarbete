@@ -28,6 +28,7 @@ public class ErrorHandling
         }
     }
 
+
     private string _message = string.Empty;
     public string Message
     {
@@ -210,12 +211,17 @@ public class ErrorHandling
 
     public void Upload(UserFile file)
     {
-        if (file.GetSizeB < 200000)
+        if (file.GetSizeB > 200000)
         {
             _message = "*Filen är för stor";
             _color = red;
         }
-        else if (Match(file.GetFileName, @"[(.png)(.jpeg)(.pdf)]"))
+        else if (!sql.CheckDuplicateFile(file))
+        {
+            _message = "*Det existerar redan en fil med det namnet";
+            _color = red;
+        }
+        else if (!Match(file.GetFileName, @"(?i)(\.pdf|\.jpeg|\.png)"))
         {
             _message = "*Filtypen är förbjuden";
             _color = red;

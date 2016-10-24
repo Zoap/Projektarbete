@@ -54,6 +54,29 @@ public class SqlHandler
         conn.Close();
     }
 
+    public bool CheckDuplicateFile(UserFile file)
+    {
+        bool check;
+        int count;
+
+        conn.Open();
+        MySqlCommand select = new MySqlCommand("SELECT COUNT(*) FROM files WHERE filename = @filename", conn);
+        select.Parameters.AddWithValue("@filename", file.GetFileName);
+        count = Convert.ToInt32(select.ExecuteScalar());
+        conn.Close();
+
+        if (count >= 1)
+        {
+            check = false;
+        }
+        else
+        {
+            check = true;
+        }
+
+        return check;
+    }
+
     //Kollar om användarnamnet redan finns i user table i databasen
     public bool CheckDuplicateUser(string username)
     {
@@ -107,32 +130,6 @@ public class SqlHandler
     {
         MySqlCommand insert = new MySqlCommand("COMMIT", conn);
         insert.ExecuteNonQuery();
-    }
-
-    private string GetQueryResultMultiple(string cmd, string[] names)
-    {
-        string returnData = "";
-        MySqlCommand query = new MySqlCommand(cmd, conn);
-        conn.Open();
-        MySqlDataReader sqlReader = query.ExecuteReader();
-        try
-        {
-            while (sqlReader.Read())
-            {
-                if (returnData != "")
-                    returnData += "|";
-                foreach (string name in names)
-                {
-                    returnData += sqlReader[name].ToString() + ",";
-                }
-            }
-        }
-        finally
-        {
-            sqlReader.Close();
-            conn.Close();
-        }
-        return returnData;
     }
 
     public void FileUpload(UserFile file)
