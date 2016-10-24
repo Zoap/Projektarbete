@@ -148,6 +148,17 @@ public class SqlHandler
         Commit();
         conn.Close();
     }
+    public void CreateFolder(UserFolder folder)
+    {
+        conn.Open();
+        MySqlCommand insert = new MySqlCommand("INSERT INTO folders(folder_name, owner) " +
+                                                "VALUES(@folder_name, @owner)", conn);
+        insert.Parameters.AddWithValue("@folder_name", folder.FolderName);
+        insert.Parameters.AddWithValue("@owner", folder.FolderOwner);
+        insert.ExecuteNonQuery();
+        Commit();
+        conn.Close();
+    }
 
     public string GetFolders(string username)
     {

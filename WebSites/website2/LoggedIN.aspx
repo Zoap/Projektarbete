@@ -9,7 +9,6 @@
 
     <!-- JavaScrip -->
     <script type="text/javascript" src="JavaScript/jquery-3.1.1.min.js"></script>
-    <script type="text/javascript" src="JavaScript/DropZone.js"></script>
     <script type="text/javascript">
         var selectedFile;
         $(document).ready(function () {
@@ -104,10 +103,8 @@
             <div id="mainContentUpload">
 			    <p>För att ladda upp en fil</p>
                 <div id="dropzoneUpload">
-                    <center>
                         <input type="button" id="btnUpload" value="Upload file" />
                         <p>Drag & Drop</p>
-                    </center>
                 </div>
             </div>
             <div id="mainContentMyFiles">
@@ -117,11 +114,15 @@
                         <p>Existing folders:</p>
                         <div id="folderSelectionExisting" runat="server">
                         </div>
+                        <div id="mainContentCreateFolder">
+                            <p>Create a folder:</p>
+                            <asp:TextBox ID="createFolderName" runat="server" placeholder="Name" BorderStyle="Solid" Width="120"></asp:TextBox>
+                            <asp:Button ID="btnCreateFolder" OnClick="btnCreateFolder_Click" runat="server" Text="Create" />
+                        </div>
                     </div>
                     <div id="fileSelection" runat="server">
 
                     </div>
-
                 </div>
             </div>
         </div>

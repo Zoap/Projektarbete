@@ -35,8 +35,8 @@ public class FolderHandler
             foreach (string folderString in folderData)
             {
                 _folderList.Add(
-                    Int32.Parse(folderString.Split(',')[0]),    //mapp ID
-                    new UserFolder(folderString, _username)      //mapp objekt
+                    Int32.Parse(folderString.Split(',')[0]),            //mapp ID
+                    new UserFolder(folderString, _username, false)      //mapp objekt
                     );
             }
     }
@@ -47,7 +47,7 @@ public class FolderHandler
     private void GetUnsorted()
     {
         string folderInfo = "0,Unsorted";
-        _folderList.Add(0, new UserFolder(folderInfo, _username));
+        _folderList.Add(0, new UserFolder(folderInfo, _username, false));
     }
     
     /// <summary>

@@ -10,7 +10,7 @@ using System.IO;
 
 public partial class LoggedIN : System.Web.UI.Page
 {
-    private FolderHandler userFolders;
+    private FolderHandler _userFolders;
     protected void Page_Load(object sender, EventArgs e)
     {
         //Kollar om Username finns i den aktiva sessionen
@@ -22,11 +22,11 @@ public partial class LoggedIN : System.Web.UI.Page
         else
         {
             if (Session["userFolders"] == null)
-                GetUserFiles(Session["Username"].ToString());
+                getUserFiles(Session["Username"].ToString());
             else
             {
-                userFolders = (FolderHandler)Session["userFolders"];
-                PopulateFolders();
+                _userFolders = (FolderHandler)Session["userFolders"];
+                populateFolders();
             }
 
         }
@@ -41,17 +41,17 @@ public partial class LoggedIN : System.Web.UI.Page
 
     }
 
-    private void GetUserFiles(string user)
+    private void getUserFiles(string user)
     {
-        userFolders = new FolderHandler(user);
-        PopulateFolders();
-        Session["userFolders"] = userFolders;
+        _userFolders = new FolderHandler(user);
+        populateFolders();
+        Session["userFolders"] = _userFolders;
     }
-    private void PopulateFolders()
+    private void populateFolders()
     {
         folderSelectionExisting.Controls.Clear();
         fileSelection.Style.Add("display", "none");
-        foreach (UserFolder folder in userFolders.Folders.Values)
+        foreach (UserFolder folder in _userFolders.Folders.Values)
         {
             HtmlGenericControl folderDiv = new HtmlGenericControl("DIV");
             folderDiv.ID = "folder_" + folder.FolderID;
@@ -88,7 +88,7 @@ public partial class LoggedIN : System.Web.UI.Page
         fileSelection.InnerHtml = "<table><tr><td>Filename</td><td>Filesize</td><td>Upload date</td><td></td><td></td></tr>";
 
         //Hämta filer
-        foreach (UserFile file in userFolders.Folders[folderKey].Files)
+        foreach (UserFile file in _userFolders.Folders[folderKey].Files)
         {
             HtmlGenericControl fileDiv = new HtmlGenericControl("DIV");
             fileDiv.ID = "file_" + file.GetFileName;
@@ -105,10 +105,10 @@ public partial class LoggedIN : System.Web.UI.Page
 
     }
 
-    protected void DownloadSelectedFile(string selectedFile)
+    private void downloadSelectedFile(string selectedFile)
     {
         int activeFolderID = Int32.Parse(folderSelectionExisting.FindControl(Session["activeFolder"].ToString()).ID.Split('_')[1]);
-        UserFile fileInfo = userFolders.Folders[activeFolderID].Files.Find(file => file.GetFileName == selectedFile);
+        UserFile fileInfo = _userFolders.Folders[activeFolderID].Files.Find(file => file.GetFileName == selectedFile);
 
         if (File.Exists(fileInfo.GetFilePath + fileInfo.GetFileName))
         {
@@ -122,16 +122,31 @@ public partial class LoggedIN : System.Web.UI.Page
             Response.End();
         }
     }
-    protected void DeleteSelectedFile(string selectedFile)
+    private void deleteSelectedFile(string selectedFile)
     {
         int activeFolderID = Int32.Parse(folderSelectionExisting.FindControl(Session["activeFolder"].ToString()).ID.Split('_')[1]);
-        UserFile fileToDelete = userFolders.Folders[activeFolderID].Files.Find(file => file.GetFileName == selectedFile);
+        UserFile fileToDelete = _userFolders.Folders[activeFolderID].Files.Find(file => file.GetFileName == selectedFile);
 
         SqlHandler sqlHandler = new SqlHandler();
         sqlHandler.DeleteFile(Session["Username"].ToString(), activeFolderID, fileToDelete.GetFileName);
         fileToDelete.Delete();
 
-        GetUserFiles(Session["Username"].ToString());
+        getUserFiles(Session["Username"].ToString());
+    }
+
+    protected void btnCreateFolder_Click(object sender, EventArgs e)
+    {
+        string path = "C:/uploads/" + Session["Username"].ToString() + "/";
+        if (!Directory.Exists(path + createFolderName.Text))
+        {
+            UserFolder folder = new UserFolder(createFolderName.Text, Session["Username"].ToString(), true);
+            Directory.CreateDirectory(path + folder.FolderName);
+        }
+        else
+        {
+            //Mappen finns redan
+        }
+        getUserFiles(Session["Username"].ToString());
     }
 
     public void RaisePostBackEvent(string eArg)
@@ -139,7 +154,7 @@ public partial class LoggedIN : System.Web.UI.Page
         //Uppladdnings event
         if (eArg == "uploadSuccess")
         {
-            GetUserFiles(Session["Username"].ToString());
+            getUserFiles(Session["Username"].ToString());
         }
 
         //Click evnent i filhanteraren
@@ -152,7 +167,7 @@ public partial class LoggedIN : System.Web.UI.Page
         {
             string[] parts = eArg.Split('_').Skip(1).ToArray();
             string fileName = string.Join("_", parts);
-            DownloadSelectedFile(fileName);
+            downloadSelectedFile(fileName);
         }
         else if (senderType == "delete")    //Borttag -
         {
@@ -160,7 +175,7 @@ public partial class LoggedIN : System.Web.UI.Page
             {
                 string[] parts = eArg.Split('_').Skip(2).ToArray();
                 string fileName = string.Join("_", parts);
-                DeleteSelectedFile(fileName);
+                deleteSelectedFile(fileName);
             }
             else if (eArg.Split('_')[1] == "folder") // - av mapp
             {
