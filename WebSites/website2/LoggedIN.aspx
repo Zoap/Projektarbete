@@ -109,6 +109,7 @@
                         <p>Drag & Drop</p>
                     </center>
                 </div>
+                <asp:Label ID="leftEventLabel" runat="server" Visible="false"/>
             </div>
             <div id="mainContentMyFiles">
                 <p>Upladdade filer</p>

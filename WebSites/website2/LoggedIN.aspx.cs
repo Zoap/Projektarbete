@@ -11,6 +11,7 @@ using System.IO;
 public partial class LoggedIN : System.Web.UI.Page
 {
     private FolderHandler userFolders;
+    private ErrorHandling error = new ErrorHandling();
     protected void Page_Load(object sender, EventArgs e)
     {
         //Kollar om Username finns i den aktiva sessionen
@@ -38,7 +39,6 @@ public partial class LoggedIN : System.Web.UI.Page
                 RaisePostBackEvent(eArg);
             }
         }
-
     }
 
     private void GetUserFiles(string user)

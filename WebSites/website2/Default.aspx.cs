@@ -49,7 +49,7 @@ public partial class _Default : System.Web.UI.Page
 
     private void HandleLogin(string userName, string password)
     {
-        string message = error.login(userName, password);
+        error.Login(userName, password);
         
         if (error.State)
         {
@@ -61,7 +61,7 @@ public partial class _Default : System.Web.UI.Page
         else
         {
             registrationUsername.Text = string.Empty;
-            leftEventLabel.Text = message;
+            leftEventLabel.Text = error.Message;
             leftEventLabel.CssClass = error.Color;
             rightEventLabel.Visible = false;
             leftEventLabel.Visible = true;
@@ -70,7 +70,7 @@ public partial class _Default : System.Web.UI.Page
 
     private void HandleRegistration(string userName, string email, string password, string passwordRepeat)
     {
-        string message = error.Registration(userName, email,  password, passwordRepeat);
+        error.Registration(userName, email,  password, passwordRepeat);
 
         if (error.State)
         {
@@ -78,7 +78,7 @@ public partial class _Default : System.Web.UI.Page
         }
 
         loginUsername.Text = string.Empty;
-        rightEventLabel.Text = message;
+        rightEventLabel.Text = error.Message;
         rightEventLabel.CssClass = error.Color;
         leftEventLabel.Visible = false;
         rightEventLabel.Visible = true;

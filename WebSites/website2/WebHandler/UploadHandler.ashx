@@ -4,11 +4,14 @@ using System;
 using System.Web;
 using System.Web.SessionState;
 using System.IO;
+using System.Web.UI;
 
 /// <summary>
 /// En handler som hanterar uppladdning av filer
 /// </summary>
-public class Handler : IHttpHandler, IRequiresSessionState {
+public class Handler : IHttpHandler, IRequiresSessionState
+{
+    ErrorHandling error = new ErrorHandling();
 
     public void ProcessRequest (HttpContext context)
     {
@@ -21,13 +24,20 @@ public class Handler : IHttpHandler, IRequiresSessionState {
             UserFile file = new UserFile(context.Session["Username"].ToString(), formFile.FileName, fullPath, formFile.ContentLength);
 
             if (!Directory.Exists(diskPath))
+            {
                 Directory.CreateDirectory(diskPath);
+            }
+            
             if (!Directory.Exists(diskPath + context.Session["Username"]))
+            {
                 Directory.CreateDirectory(diskPath + context.Session["Username"]);
+            }
+
 
             formFile.SaveAs(file.GetFilePath + file.GetFileName);
             updateDB.FileUpload(file);
         }
+
         context.Response.ContentType = "text/plain";
         context.Response.Write("Handler request successfull.");
     }

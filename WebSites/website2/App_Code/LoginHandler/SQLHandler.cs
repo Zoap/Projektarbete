@@ -78,6 +78,7 @@ public class SqlHandler
         return check;
     }
 
+    // Kollar om email finns i databasen
     public bool CheckDuplicateEmail(string email)
     {
         bool check;

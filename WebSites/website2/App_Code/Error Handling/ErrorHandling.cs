@@ -28,6 +28,15 @@ public class ErrorHandling
         }
     }
 
+    private string _message = string.Empty;
+    public string Message
+    {
+        get
+        {
+            return _message;
+        }
+    }
+
     //Används som variabel utanför ErrorHandling för att kolla om fel upptäckts
     private bool _state = false;
     public bool State
@@ -59,11 +68,16 @@ public class ErrorHandling
         return check;
     }
 
+    private bool Match(string source, string regex)
+    {
+        return Regex.IsMatch(source, regex);
+    }
+
     private bool CheckEmail(string email)
     {
         bool check;
 
-        if (Regex.IsMatch(email, @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*" + "@" + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$"))
+        if (Match(email, @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*" + "@" + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$"))
         {
             check = true;
         }
@@ -120,84 +134,95 @@ public class ErrorHandling
     }
 
     //Felhantering i registreringsfasen
-    public string Registration(string username, string email, string password, string passwordRepeat)
+    public void Registration(string username, string email, string password, string passwordRepeat)
     {
-        string message;
-
         //Lite felhantering (borde kollas efter specifika chars osv.) orkarde inte regex
         if (!string.IsNullOrEmpty(username))
         {
             if (!CheckUsername(username))
             {
-                message = "*Användarnamnet får endast innehålla karaktärerna 0-9, A-Z, a-z";
+                _message = "*Användarnamnet får endast innehålla karaktärerna 0-9, A-Z, a-z";
                 _color = red;
             }
             else if (!sql.CheckDuplicateUser(username))
             {
-                message = "*Användarnamnet är upptaget";
+                _message = "*Användarnamnet är upptaget";
                 _color = red;
 
             }
             else if (string.IsNullOrEmpty(email))
             {
-                message = "*En E-mailadress måste anges";
+                _message = "*En E-mailadress måste anges";
                 _color = red;
             }
             else if (!sql.CheckDuplicateEmail(email))
             {
-                message = "*E-mail adressen är redan knutet till ett konto";
+                _message = "*E-mail adressen är redan knutet till ett konto";
                 _color = red;
             }
             else if (!CheckEmail(email))
             {
-                message = "*E-mail adressen är inte giltig";
+                _message = "*E-mail adressen är inte giltig";
                 _color = red;
             }
             else if (!CheckPassword(password))
             {
-                message = "*Lösenordet måste vara minst 6 tecken långt, innehålla minst en versal, en siffra och ett av följande tecken: ] [ ? / < ~ # ` ! @ $ % ^ & * ( ) + = } | : \" ; ' , > { space";
+                _message = "*Lösenordet måste vara minst 6 tecken långt, innehålla minst en versal, en siffra och ett av följande tecken: ] [ ? / < ~ # ` ! @ $ % ^ & * ( ) + = } | : \" ; ' , > { space";
                 _color = red;
             }
             else if (password == passwordRepeat && !string.IsNullOrEmpty(password))
             {
                 _state = true;
-                message = "Registration successfull!";
+                _message = "Registration successfull!";
                 _color = green;
             }
             else if (password != passwordRepeat && !string.IsNullOrEmpty(password))
             {
-                message = "*Lösenordet måste matcha";
+                _message = "*Lösenordet måste matcha";
                 _color = red;
             }
             else
             {
-                message = "*Lösenordsfältet kan inte vara tomt";
+                _message = "*Lösenordsfältet kan inte vara tomt";
                 _color = red;
             }
         }
         else
         {
-            message = "*Användarnamnsfältet kan inte vara tomt";
+            _message = "*Användarnamnsfältet kan inte vara tomt";
             _color = red;
         }
-        return message;
     }
 
     //Felhantering i login fasen
-    public string login(string username, string password)
+    public void Login(string username, string password)
     {
-        string message = string.Empty;
-
         if (sql.Login(username, password))
         {
             _state = true;
         }
         else
         {
-            message = "*Felaktigt användarnamn/lösenord";
+            _message = "*Felaktigt användarnamn/lösenord";
             _color = red;
         }
+    }
 
-        return message;
+    public void Upload(UserFile file)
+    {
+        if (file.GetSizeB < 200000)
+        {
+            _message = "*Filen är för stor";
+            _color = red;
+        }
+        else if (Match(file.GetFileName, @"[(.png)(.jpeg)(.pdf)]"))
+        {
+            _message = "*Filtypen är förbjuden";
+            _color = red;
+        }
+        else
+        {
+            _state = true;
+        }
     }
 }
