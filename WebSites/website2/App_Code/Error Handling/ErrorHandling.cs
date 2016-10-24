@@ -221,7 +221,7 @@ public class ErrorHandling
             _message = "*Det existerar redan en fil med det namnet";
             _color = red;
         }
-        else if (!Match(file.GetFileName, @"(?i)(\.pdf|\.jpeg|\.png)"))
+        else if (!Match(file.GetFileName, @"(?i)(\.)(pdf|jpeg|png)"))
         {
             _message = "*Filtypen är förbjuden";
             _color = red;

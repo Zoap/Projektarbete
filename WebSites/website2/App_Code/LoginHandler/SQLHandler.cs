@@ -11,9 +11,19 @@ public class SqlHandler
 {
     //Skapar en ny anslutning mot databasen
     private MySqlConnection conn = new MySqlConnection(@"server=localhost;userid=root;password=rootpassword;database=projekt;");
+    private HashAndSalt crypto = new HashAndSalt();
 
     public SqlHandler()
     {
+    }
+
+    private string GetDate(string username)
+    {
+        MySqlCommand select = new MySqlCommand("SELECT create_time FROM user WHERE username = @username", conn);
+        select.Parameters.AddWithValue("@username", username);
+        string date = Convert.ToDateTime(select.ExecuteScalar()).ToString("yyyy-MM-dd HH:mm:ss");
+
+        return date;
     }
 
     //Kollar user table i databasen efter angivet användarnamn och lösenord
@@ -23,9 +33,12 @@ public class SqlHandler
         int count;
 
         conn.Open();
+        string date = GetDate(username);
+        string hashedPassword = crypto.Hash(password, date);
+
         MySqlCommand select = new MySqlCommand("SELECT COUNT(*) FROM user WHERE username = @username AND password = @password", conn);
         select.Parameters.AddWithValue("@username", username);
-        select.Parameters.AddWithValue("@password", password);
+        select.Parameters.AddWithValue("@password", hashedPassword);
         count = Convert.ToInt32(select.ExecuteScalar());
         conn.Close();
 
@@ -45,9 +58,12 @@ public class SqlHandler
     public void Register(string username, string email, string password)
     {
         conn.Open();
+        string date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        string hashedPassword = crypto.Hash(password, date);
+
         MySqlCommand insert = new MySqlCommand("INSERT INTO user(username, email, password) VALUES(@username, @email, @password)", conn);
         insert.Parameters.AddWithValue("@username", username);
-        insert.Parameters.AddWithValue("@password", password);
+        insert.Parameters.AddWithValue("@password", hashedPassword);
         insert.Parameters.AddWithValue("@email", email);
         insert.ExecuteNonQuery();
         Commit();

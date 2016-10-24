@@ -33,8 +33,10 @@ public class Handler : IHttpHandler, IRequiresSessionState
                 Directory.CreateDirectory(diskPath + context.Session["Username"]);
             }
 
+            // Utför felhantering på fil som står inför uppladdning
             error.Upload(file);
-
+            
+            // Om inga fel upptäckts -> ladda upp
             if (error.State)
             {
                 context.Session["message"] = null;
@@ -42,6 +44,7 @@ public class Handler : IHttpHandler, IRequiresSessionState
                 formFile.SaveAs(file.GetFilePath + file.GetFileName);
                 updateDB.FileUpload(file);
             }
+            // Skicka tillbaka felbeskrinvning till LoggedIN.aspx
             else
             {
                 context.Session["message"] = error.Message;
