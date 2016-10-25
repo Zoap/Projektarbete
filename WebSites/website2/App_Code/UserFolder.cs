@@ -12,19 +12,30 @@ public class UserFolder
     private List<UserFile> _uFiles = new List<UserFile>();
     private string _userName, _folderName;
     private int _folderID;
+
     
     /// <summary>
     /// Skapar en instans av mappen och splittar SQLData in i korrekta variabler.
     /// Kallar sedan på metoden populateFiles för att hämta filerna som tillhör mappen.
     /// </summary>
-    /// <param name="SQLData">Datan som SQLHandler returnerade vid mapp hämtningen</param>
+    /// <param name="data">SQLData om isNew = true, namnet på mapp om isNew = false</param>
     /// <param name="username">Den aktiva användaren</param>
-    public UserFolder(string SQLData, string username)
+    /// <param name="isNew">True = ny mapp, false = hämta användarmappar</param>
+    public UserFolder(string data, string username, bool isNew)
     {
-        _userName = username;
-        _folderID = Int32.Parse(SQLData.Split(',')[0]);
-        _folderName = SQLData.Split(',')[1];
-        populateFiles();
+        if(!isNew)
+        { 
+            _userName = username;
+            _folderID = Int32.Parse(data.Split(',')[0]);
+            _folderName = data.Split(',')[1];
+            populateFiles();
+        }
+        else
+        {
+            _userName = username;
+            _folderName = data;
+            _SQLHandler.CreateFolder(this);
+        }
     }
 
     /// <summary>
@@ -47,6 +58,10 @@ public class UserFolder
             }
     }
 
+    /// <summary>
+    /// Returnerar namnet på ägaren av mappen
+    /// </summary>
+    public string FolderOwner { get { return _userName; } }
     /// <summary>
     /// Returnerare namnet på mappen
     /// </summary>

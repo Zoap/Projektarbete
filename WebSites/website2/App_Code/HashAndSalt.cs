@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Security.Cryptography;
 
 /// <summary>
 /// Summary description for HashAndSalt
@@ -14,22 +16,29 @@ public class HashAndSalt
 
     public string Hash(string password, string datetime = null)
     {
+        MD5 md5 = System.Security.Cryptography.MD5.Create();
+
         if (string.IsNullOrEmpty(datetime))
         {
             datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         }
 
-        string salt = password + datetime;
-        byte[] array = new byte[salt.Length];
-        int i = 0;
+        byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(password);
+        byte[] inputSalt = System.Text.Encoding.ASCII.GetBytes(datetime);
+        byte[] salt = new byte[inputBytes.Length + inputSalt.Length];
+        byte[] hash = md5.ComputeHash(inputBytes);
 
-        foreach (char bit in salt)
+        StringBuilder hashedPassword = new StringBuilder();
+
+        for (int i = 0; i < hash.Length; i++)
+
         {
-            array[i] = Convert.ToByte(bit);
-            i++;
+
+            hashedPassword.Append(hash[i].ToString("x2"));
+
         }
 
-        return Convert.ToBase64String(array);
+        return hashedPassword.ToString();
     }
 
 }
