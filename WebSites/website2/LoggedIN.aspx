@@ -103,8 +103,10 @@
             <div id="mainContentUpload">
 			    <p>För att ladda upp en fil</p>
                 <div id="dropzoneUpload">
+                    <center>
                         <input type="button" id="btnUpload" value="Upload file" />
                         <p>Drag & Drop</p>
+                    </center>
                 </div>
                 <asp:Label ID="leftEventLabel" runat="server" Visible="false"/>
             </div>

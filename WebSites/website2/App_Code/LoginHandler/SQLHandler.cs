@@ -255,4 +255,21 @@ public class SqlHandler
         Commit();
         conn.Close();
     }
+    public void MoveFile(string username, int folderIDOld, string fileName, string newPath, int folderIDNew)
+    {
+        conn.Open();
+        MySqlCommand move = new MySqlCommand("UPDATE files SET filepath = @filepath, folder_id = @newID " +
+                                             "WHERE username = @username AND folder_id = @oldID AND filename = @filename", conn);
+
+        //UPDATE files SET filepath = "C:/uploads/Tivor/Pelle/", folder_id = 7
+        //WHERE username = "Tivor" AND folder_id = 0 AND filename = "Dump20161019.sql"
+        move.Parameters.AddWithValue("@filepath", newPath);
+        move.Parameters.AddWithValue("@newID", folderIDNew);
+        move.Parameters.AddWithValue("@username", username);
+        move.Parameters.AddWithValue("@oldID", folderIDOld);
+        move.Parameters.AddWithValue("@filename", fileName);
+        move.ExecuteNonQuery();
+        Commit();
+        conn.Close();
+    }
 }

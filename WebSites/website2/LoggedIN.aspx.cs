@@ -93,27 +93,101 @@ public partial class LoggedIN : System.Web.UI.Page
         activeDiv = (HtmlGenericControl)folderSelectionExisting.FindControl("folder_" + selectedFolder);
         activeDiv.Attributes["class"] = "folderGraphicsActive";
         Session["activeFolder"] = "folder_" + selectedFolder;
-
         fileSelection.Controls.Clear();
 
-        fileSelection.InnerHtml = "<table><tr><td>Filename</td><td>Filesize</td><td>Upload date</td><td></td><td></td></tr>";
+        HtmlTable fileTable = new HtmlTable();
+        fileTable.ID = "fileTable";
 
-        //Hämta filer
-        foreach (UserFile file in _userFolders.Folders[folderKey].Files)
+        //header
+        fileTable.Rows.Add(getTableRow(new string[8] {"","Filename", "Filesize", "Upload date", "Folder", "", "",""}, null));
+        foreach(UserFile file in _userFolders.Folders[folderKey].Files)
         {
-            HtmlGenericControl fileDiv = new HtmlGenericControl("DIV");
-            fileDiv.ID = "file_" + file.GetFileName;
-            fileDiv.Attributes["class"] = "fileGraphics";
-            fileDiv.Attributes.Add("onclick",
-            Page.ClientScript.GetPostBackEventReference(fileDiv, fileDiv.ID));
-            fileDiv.InnerHtml = "<tr><td>" + file.GetFileName
-                              + "</td><td>" + file.GetSizeB
-                              + "</td><td>" + file.GetTimeStamp.Date.ToShortDateString()
-                              + "</td><td><img src='/Images/download.png' height='15' width='15' onclick='__doPostBack(\"" + file.GetFileName + "\",\"download_" + file.GetFileName + "\")'>"
-                              + "</td><td><img src='/Images/delete.png' height='13' width='13' onclick='__doPostBack(\"" + file.GetFileName + "\",\"delete_file_" + file.GetFileName + "\")'></td></tr>";
-            fileSelection.Controls.Add(fileDiv);
+            fileTable.Rows.Add(getTableRow(new string[8] {
+                "<div id='file_" + file.GetFileName + "' class='fileGraphics'>",
+                file.GetFileName,
+                file.GetSizeB.ToString(),
+                file.GetTimeStamp.ToShortDateString(),
+                "selectFolder",
+                "<img src='/Images/download.png' height='15' width='15' onclick='__doPostBack(\"" + file.GetFileName + "\",\"download_" + file.GetFileName + "\")'>",
+                "<img src='/Images/delete.png' height='13' width='13' onclick='__doPostBack(\"" + file.GetFileName + "\",\"delete_file_" + file.GetFileName + "\")'>",
+                "</div>"
+            }, file));
+        }
+        fileSelection.Controls.Add(fileTable);
+    }
+    private HtmlTableRow getTableRow(string[] tableData, UserFile file)
+    {
+        HtmlTableRow tableRow = new HtmlTableRow();
+        foreach (string cellData in tableData)
+        {
+            HtmlTableCell tableCell = new HtmlTableCell();
+            if (cellData == "selectFolder")
+            {
+                tableCell.Controls.Add(getDropDown(file));
+            }
+            else
+            {
+                tableCell.InnerHtml = cellData;
+            }
+            tableRow.Cells.Add(tableCell);
         }
 
+        return tableRow;
+    }
+    private DropDownList getDropDown(UserFile file)
+    {
+        DropDownList ddList = new DropDownList();
+        string activeFolder = Session["activeFolder"].ToString().Split('_')[1];
+        ddList.ID = "ddList_" + file.GetFileName;
+        foreach(UserFolder folder in _userFolders.Folders.Values)
+        {
+            ListItem item = new ListItem();
+            item.Text = folder.FolderName;
+            item.Value = folder.FolderID.ToString();
+
+            if (activeFolder == folder.FolderID.ToString())
+                item.Selected = true;
+
+            ddList.Items.Add(item);
+        }
+        ddList.SelectedIndexChanged += DdList_SelectedIndexChanged;
+        ddList.AutoPostBack = true;
+
+        return ddList;
+    }
+
+    private void DdList_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        DropDownList list = (DropDownList)sender;
+        SqlHandler SQLHandler = new SqlHandler();
+
+        string[] parts = list.ID.Split('_').Skip(1).ToArray();
+        string fileName = string.Join("_", parts);
+        int currFolderID = Int32.Parse(Session["activeFolder"].ToString().Split('_')[1]);
+        int destFolderID = Int32.Parse(list.SelectedValue);
+        UserFolder currFolder = _userFolders.Folders[currFolderID];
+        UserFolder destFolder = _userFolders.Folders[destFolderID];
+        UserFile fileToMove = currFolder.Files.Find(file => file.GetFileName == fileName);
+
+        if (currFolder.FolderID != destFolder.FolderID)
+        {
+            string currLocation = fileToMove.GetFilePath;
+            string destLocation = "C:/uploads/" + destFolder.FolderOwner + "/" + destFolder.FolderName + "/";
+            if (File.Exists(fileToMove.GetFilePath + fileToMove.GetFileName))
+            {
+                File.Move(currLocation + fileToMove.GetFileName, destLocation + fileToMove.GetFileName);
+                SQLHandler.MoveFile(destFolder.FolderOwner, currFolder.FolderID, fileToMove.GetFileName, destLocation, destFolder.FolderID);
+            }
+            else
+            {
+                //Filen finns inte
+            }
+        }
+        else
+        {
+            //Går inte att flytta till samma mapp
+        }
+        getUserFiles(Session["Username"].ToString());
     }
 
     private void downloadSelectedFile(string selectedFile)
@@ -157,8 +231,8 @@ public partial class LoggedIN : System.Web.UI.Page
         {
             //Mappen finns redan
         }
-        getUserFiles(Session["Username"].ToString());
         createFolderName.Text = string.Empty;
+        getUserFiles(Session["Username"].ToString());
     }
 
     public void RaisePostBackEvent(string eArg)

@@ -19,7 +19,7 @@ public class Handler : IHttpHandler, IRequiresSessionState
         {
             SqlHandler updateDB = new SqlHandler();
             HttpPostedFile formFile = context.Request.Files[0];
-            string diskPath = "C:/uploads/";
+            string diskPath = "C:/uploads/unsorted/";
             string fullPath = diskPath + context.Session["Username"] + "/";
             UserFile file = new UserFile(context.Session["Username"].ToString(), formFile.FileName, fullPath, formFile.ContentLength);
 

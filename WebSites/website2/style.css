@@ -116,6 +116,10 @@ body
                 float: right;
                 width: 70%;
             }
+            #fileTable td
+            {
+                padding-right: 3px;
+            }
 
 .clearFloat
 {
