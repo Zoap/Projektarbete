@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.IO;
 
 /// <summary>
 /// Hanteraren för användarens mappar.
@@ -74,4 +75,18 @@ public class UserFolder
     /// Returnerar listan med filer
     /// </summary>
     public List<UserFile> Files { get { return _uFiles; } }
+
+    /// <summary>
+    /// Raderar mappen
+    /// </summary>
+    public void Delete()
+    {
+        string diskPath = "C:/uploads/" + _userName + "/" + FolderName + "/";
+        //Tror jag gjorde Linux path rätt
+        //string diskPath = "/var/www/projectdrop.se/data/" + _userName + "/" + FolderName + "/"; //Kod för produktionsmiljö, Linux
+        if(Directory.Exists(diskPath))
+        {
+            Directory.Delete(diskPath);
+        }
+    }
 }

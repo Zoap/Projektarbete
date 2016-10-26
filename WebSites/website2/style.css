@@ -91,6 +91,7 @@ body
                 }
                     .folderGraphics
                     {
+                        display: inline;
                         margin-left: 5px;
                     }
                     .folderGraphics p
@@ -101,6 +102,7 @@ body
                     }
                     .folderGraphicsActive
                     {
+                        display: inline;
                         background-color: lightcyan;
                         margin-left: 5px;
                     }

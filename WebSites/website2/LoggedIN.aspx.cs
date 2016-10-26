@@ -52,35 +52,63 @@ public partial class LoggedIN : System.Web.UI.Page
         }  
     }
 
+    /// <summary>
+    /// Skapar en ny instans av _userFolders, används när filträdet behöver förnyas
+    /// </summary>
+    /// <param name="user">Den aktiva användaren</param>
     private void getUserFiles(string user)
     {
         _userFolders = new FolderHandler(user);
         populateFolders();
         Session["userFolders"] = _userFolders;
     }
+    /// <summary>
+    /// Skapar listan med mappar som tillhör användaren
+    /// </summary>
     private void populateFolders()
     {
         folderSelectionExisting.Controls.Clear();
         fileSelection.Style.Add("display", "none");
+
         foreach (UserFolder folder in _userFolders.Folders.Values)
         {
-            HtmlGenericControl folderDiv = new HtmlGenericControl("DIV");
-            folderDiv.ID = "folder_" + folder.FolderID;
-            folderDiv.Attributes["class"] = "folderGraphics";
-            folderDiv.Attributes.Add("onclick",
-            Page.ClientScript.GetPostBackEventReference(folderDiv, folderDiv.ID));
-            folderDiv.InnerHtml = "<img src='/Images/folder.png' height='15' width='15'><p>" + folder.FolderName + "</p>";
-            folderSelectionExisting.Controls.Add(folderDiv);
+            HtmlGenericControl folderWrapper = new HtmlGenericControl("DIV");
+            
+            //Radera mapp
+            HtmlGenericControl deleteFolder = new HtmlGenericControl("DIV");
+            deleteFolder.ID = "delete_folder_" + folder.FolderID;
+            deleteFolder.Attributes["class"] = "folderGraphics";
+            deleteFolder.Attributes.Add("onclick",
+            Page.ClientScript.GetPostBackEventReference(deleteFolder, deleteFolder.ID));
+            deleteFolder.InnerHtml = "<img src='/Images/delete.png' height='15' width='15'>";
+            folderWrapper.Controls.Add(deleteFolder);
+
+            //Välja mapp
+            HtmlGenericControl viewFolder = new HtmlGenericControl("DIV");
+            viewFolder.ID = "folder_" + folder.FolderID;
+            viewFolder.Attributes["class"] = "folderGraphics";
+            viewFolder.Attributes.Add("onclick",
+            Page.ClientScript.GetPostBackEventReference(viewFolder, viewFolder.ID));
+            viewFolder.InnerHtml = "<img src='/Images/folder.png' height='15' width='15'><p>" + folder.FolderName + "</p>";
+            folderWrapper.Controls.Add(viewFolder);
+
+            folderSelectionExisting.Controls.Add(folderWrapper);
         }
 
         //Mappen "Unsorted" som standard val
-        if(string.IsNullOrEmpty((string)Session["activeFolder"]))
+        if (string.IsNullOrEmpty((string)Session["activeFolder"]))
             GetFolderFiles("0");
         else
             GetFolderFiles(Session["activeFolder"].ToString().Split('_')[1]);
 
     }
 
+    /// <summary>
+    /// Innehåller:
+    /// *Grafikfix för highligt av den aktiva mappen
+    /// *Skapandet av tabellen som visar filerna i filträdet
+    /// </summary>
+    /// <param name="selectedFolder">Den valda mappen</param>
     protected void GetFolderFiles(string selectedFolder)
     {
         int folderKey = Int32.Parse(selectedFolder);
@@ -99,11 +127,13 @@ public partial class LoggedIN : System.Web.UI.Page
         Session["activeFolderName"] = _userFolders.Folders[folderKey].FolderName;
         fileSelection.Controls.Clear();
 
+        //Skapa filträdet
         HtmlTable fileTable = new HtmlTable();
         fileTable.ID = "fileTable";
 
         //header
         fileTable.Rows.Add(getTableRow(new string[8] {"","Filename", "Filesize", "Upload date", "Folder", "", "",""}, null));
+        //Filer
         foreach(UserFile file in _userFolders.Folders[folderKey].Files)
         {
             fileTable.Rows.Add(getTableRow(new string[8] {
@@ -119,6 +149,12 @@ public partial class LoggedIN : System.Web.UI.Page
         }
         fileSelection.Controls.Add(fileTable);
     }
+    /// <summary>
+    /// Skapar tabell rader för filträdet
+    /// </summary>
+    /// <param name="tableData">Datan som varje cell ska innehålla</param>
+    /// <param name="file">Filen cellen tillhör</param>
+    /// <returns>En färdig row</returns>
     private HtmlTableRow getTableRow(string[] tableData, UserFile file)
     {
         HtmlTableRow tableRow = new HtmlTableRow();
@@ -138,7 +174,12 @@ public partial class LoggedIN : System.Web.UI.Page
 
         return tableRow;
     }
-
+    
+    /// <summary>
+    /// Skapar och returnerar dropdownlistan med mappar
+    /// </summary>
+    /// <param name="file">Filen som listan ska tillhöra</param>
+    /// <returns>Färdig ddList</returns>
     private DropDownList getDropDown(UserFile file)
     {
         DropDownList ddList = new DropDownList();
@@ -196,6 +237,10 @@ public partial class LoggedIN : System.Web.UI.Page
         getUserFiles(Session["Username"].ToString());
     }
 
+    /// <summary>
+    /// Ladda ner en fil
+    /// </summary>
+    /// <param name="selectedFile">Namnet på filen som ska raderas</param>
     private void downloadSelectedFile(string selectedFile)
     {
         int activeFolderID = Int32.Parse(folderSelectionExisting.FindControl(Session["activeFolder"].ToString()).ID.Split('_')[1]);
@@ -213,16 +258,52 @@ public partial class LoggedIN : System.Web.UI.Page
             Response.End();
         }
     }
+    /// <summary>
+    /// Radera en fil
+    /// </summary>
+    /// <param name="selectedFile">Namnet på filen som ska raderas</param>
     private void deleteSelectedFile(string selectedFile)
     {
+        //Hämtar rätt fil
         int activeFolderID = Int32.Parse(folderSelectionExisting.FindControl(Session["activeFolder"].ToString()).ID.Split('_')[1]);
         UserFile fileToDelete = _userFolders.Folders[activeFolderID].Files.Find(file => file.GetFileName == selectedFile);
 
+        //Raderar filen
         SqlHandler sqlHandler = new SqlHandler();
         sqlHandler.DeleteFile(Session["Username"].ToString(), activeFolderID, fileToDelete.GetFileName);
         fileToDelete.Delete();
 
+        //Uppdaterar filträdet
         getUserFiles(Session["Username"].ToString());
+    }
+    /// <summary>
+    /// Radera en mapp
+    /// </summary>
+    /// <param name="selectedFolder">ID på mappen som ska raderas</param>
+    private void deleteSelectedFolder(string selectedFolder)
+    {
+        //Hämtar mappen
+        int activeFolderID = Int32.Parse(selectedFolder);
+        UserFolder folderToDelete = _userFolders.Folders[activeFolderID];
+        SqlHandler sqlHandler = new SqlHandler();
+
+        //Tar bort alla filer som tillhör mappen
+        foreach (UserFile file in folderToDelete.Files)
+        {
+            sqlHandler.DeleteFile(Session["Username"].ToString(), activeFolderID, file.GetFileName);
+            file.Delete();
+        }
+        //Raderar mappen
+        sqlHandler.DeleteFolder(folderToDelete.FolderOwner, folderToDelete.FolderID, folderToDelete.FolderName);
+        folderToDelete.Delete();
+        _userFolders.Folders.Remove(activeFolderID);
+
+        //Ändrar den aktiva mappen om den borttagna var aktiv
+        int activeFolder = Int32.Parse(Session["activeFolder"].ToString().Split('_')[1]);
+        if (activeFolder == folderToDelete.FolderID)
+            Session["activeFolder"] = "folder_0";
+        //Uppdaterar mappträdet
+        populateFolders();
     }
 
     protected void btnCreateFolder_Click(object sender, EventArgs e)
@@ -242,6 +323,10 @@ public partial class LoggedIN : System.Web.UI.Page
         getUserFiles(Session["Username"].ToString());
     }
 
+    /// <summary>
+    /// Eventhanterare för ändringar i filträdet / uppladdning av fil
+    /// </summary>
+    /// <param name="eArg">Identifierare av eventet</param>
     public void RaisePostBackEvent(string eArg)
     {
         //Uppladdnings event
@@ -275,7 +360,11 @@ public partial class LoggedIN : System.Web.UI.Page
             }
             else if (eArg.Split('_')[1] == "folder") // - av mapp
             {
+                string[] parts = eArg.Split('_').Skip(2).ToArray();
+                string folderName = string.Join("_", parts);
+                deleteSelectedFolder(folderName);
             }
         }
     }
 }
+ 

@@ -150,6 +150,11 @@ public class SqlHandler
         insert.ExecuteNonQuery();
     }
 
+    /// <summary>
+    /// Gör en insert i files
+    /// </summary>
+    /// <param name="file">Filen som ska skapas</param>
+    /// <param name="activeFolderID">ID på mappen filen ska tillhöra</param>
     public void FileUpload(UserFile file, int activeFolderID)
     {
         conn.Open();
@@ -164,6 +169,10 @@ public class SqlHandler
         Commit();
         conn.Close();
     }
+    /// <summary>
+    /// Gör en insert i folders
+    /// </summary>
+    /// <param name="folder">Mappen som ska skapas</param>
     public void CreateFolder(UserFolder folder)
     {
         conn.Open();
@@ -176,6 +185,11 @@ public class SqlHandler
         conn.Close();
     }
 
+    /// <summary>
+    /// Hämtar mappar & returnerar mappar data
+    /// </summary>
+    /// <param name="username">Användaren som ska ha mappar</param>
+    /// <returns>Mapp data</returns>
     public string GetFolders(string username)
     {
         string returnData = "";
@@ -209,6 +223,12 @@ public class SqlHandler
         return returnData;
     }
 
+    /// <summary>
+    /// Hämtar filer & returnerar fil data
+    /// </summary>
+    /// <param name="username">Användaren som ska ha filerna</param>
+    /// <param name="folderID">Mappen som filerna ligger i</param>
+    /// <returns></returns>
     public string GetFiles(string username, int folderID)
     {
         string returnData = "";
@@ -245,6 +265,12 @@ public class SqlHandler
         return returnData;
     }
 
+    /// <summary>
+    /// Raderar en fil från DB
+    /// </summary>
+    /// <param name="username">Ägaren av filen</param>
+    /// <param name="folderID">ID på mappen filen tillhör</param>
+    /// <param name="fileName">Filens namn</param>
     public void DeleteFile(string username, int folderID, string fileName)
     {
         conn.Open();
@@ -257,7 +283,33 @@ public class SqlHandler
         Commit();
         conn.Close();
     }
+    /// <summary>
+    /// Raderar en mapp från DB
+    /// </summary>
+    /// <param name="username">Ägaren av mappen</param>
+    /// <param name="folderID">Mappens ID</param>
+    /// <param name="folderName">Mappens namn</param>
+    public void DeleteFolder(string username, int folderID, string folderName)
+    {
+        conn.Open();
+        MySqlCommand delete = new MySqlCommand("DELETE FROM folders WHERE folder_id = @folderID AND folder_name = @folderName " +
+                                                "AND owner = @username LIMIT 1", conn);
+        delete.Parameters.AddWithValue("@folderID", folderID);
+        delete.Parameters.AddWithValue("@folderName", folderName);
+        delete.Parameters.AddWithValue("@username", username);
+        delete.ExecuteNonQuery();
+        Commit();
+        conn.Close();
+    }
 
+    /// <summary>
+    /// Uppdaterar data på en fil som ska flyttas
+    /// </summary>
+    /// <param name="username">Ägaren av filen</param>
+    /// <param name="folderIDOld">Den gamla mappens ID</param>
+    /// <param name="fileName">Filens namn</param>
+    /// <param name="newPath">Den nya vägen till filen</param>
+    /// <param name="folderIDNew">Den nya mappens ID</param>
     public void MoveFile(string username, int folderIDOld, string fileName, string newPath, int folderIDNew)
     {
         conn.Open();
