@@ -257,6 +257,7 @@ public class SqlHandler
         Commit();
         conn.Close();
     }
+
     public void MoveFile(string username, int folderIDOld, string fileName, string newPath, int folderIDNew)
     {
         conn.Open();

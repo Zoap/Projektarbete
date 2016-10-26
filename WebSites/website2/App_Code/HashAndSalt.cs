@@ -23,10 +23,10 @@ public class HashAndSalt
             datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         }
 
-        byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(password);
-        byte[] inputSalt = System.Text.Encoding.ASCII.GetBytes(datetime);
-        byte[] salt = new byte[inputBytes.Length + inputSalt.Length];
-        byte[] hash = md5.ComputeHash(inputBytes);
+        string random = "iKr&9Yz#1M";
+        string salted = password + random + datetime;
+        byte[] salt = Encoding.ASCII.GetBytes(salted);
+        byte[] hash = md5.ComputeHash(salt);
 
         StringBuilder hashedPassword = new StringBuilder();
 
@@ -37,6 +37,8 @@ public class HashAndSalt
             hashedPassword.Append(hash[i].ToString("x2"));
 
         }
+
+        
 
         return hashedPassword.ToString();
     }

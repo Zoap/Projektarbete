@@ -19,9 +19,9 @@ public class Handler : IHttpHandler, IRequiresSessionState
         {
             SqlHandler updateDB = new SqlHandler();
             HttpPostedFile formFile = context.Request.Files[0];
-            string diskPath = "C:/uploads/unsorted/";
-            //string diskPath = "/var/www/projectdrop.se/data/unsorted/"; //Kod för produktionsmiljö, Linux
-            string fullPath = diskPath + context.Session["Username"] + "/";
+            string diskPath = "C:/uploads/";
+            //string diskPath = "/var/www/projectdrop.se/data/"; //Kod för produktionsmiljö, Linux
+            string fullPath = diskPath + context.Session["Username"] + "/" + "unsorted";
             UserFile file = new UserFile(context.Session["Username"].ToString(), formFile.FileName, fullPath, formFile.ContentLength);
 
             if (!Directory.Exists(diskPath))
@@ -61,5 +61,4 @@ public class Handler : IHttpHandler, IRequiresSessionState
             return false;
         }
     }
-
 }
