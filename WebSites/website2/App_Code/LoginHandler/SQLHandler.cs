@@ -10,6 +10,7 @@ using MySql.Data.MySqlClient;
 public class SqlHandler
 {
     //Skapar en ny anslutning mot databasen
+    //private MySqlConnection conn = new MySqlConnection(@"server=localhost;userid=projektuser;password=yM6vsHoDVQj2EPNE#;database=projekt;");
     private MySqlConnection conn = new MySqlConnection(@"server=localhost;userid=root;password=rootpassword;database=projekt;");
     private HashAndSalt crypto = new HashAndSalt();
 
@@ -70,14 +71,15 @@ public class SqlHandler
         conn.Close();
     }
 
-    public bool CheckDuplicateFile(UserFile file)
+    public bool CheckDuplicateFile(UserFile file, string username)
     {
         bool check;
         int count;
 
         conn.Open();
-        MySqlCommand select = new MySqlCommand("SELECT COUNT(*) FROM files WHERE filename = @filename", conn);
+        MySqlCommand select = new MySqlCommand("SELECT COUNT(*) FROM files WHERE filename = @filename AND username = @username", conn);
         select.Parameters.AddWithValue("@filename", file.GetFileName);
+        select.Parameters.AddWithValue("@username", username);
         count = Convert.ToInt32(select.ExecuteScalar());
         conn.Close();
 

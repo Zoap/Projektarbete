@@ -53,11 +53,11 @@ public class ErrorHandling
     }
 
     //Kollar username efter andra tecken än 0-9, A-Z, a-z
-    private bool CheckUsername(string un)
+    private bool CheckUsername(string username)
     {
         bool check = true;
 
-        foreach (char x in un)
+        foreach (char x in username)
         {
             if (!(x <= 122 && x >= 97) && !(x <= 90 && x >= 65) && !(x <= 57 && x >= 48))
             {
@@ -209,19 +209,19 @@ public class ErrorHandling
         }
     }
 
-    public void Upload(UserFile file)
+    public void Upload(UserFile file, string username)
     {
         if (file.GetSizeB > 200000)
         {
             _message = "*Filen är för stor";
             _color = red;
         }
-        else if (!sql.CheckDuplicateFile(file))
+        else if (!sql.CheckDuplicateFile(file, username))
         {
             _message = "*Det existerar redan en fil med det namnet";
             _color = red;
         }
-        else if (!Match(file.GetFileName, @"(?i)(\.)(pdf|jpeg|png)"))
+        else if (!Match(file.GetFileName, @"(?i)(\.)(pdf|jpeg|jpg|png)"))
         {
             _message = "*Filtypen är förbjuden";
             _color = red;

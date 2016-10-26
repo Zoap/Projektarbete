@@ -20,6 +20,7 @@ public class Handler : IHttpHandler, IRequiresSessionState
             SqlHandler updateDB = new SqlHandler();
             HttpPostedFile formFile = context.Request.Files[0];
             string diskPath = "C:/uploads/unsorted/";
+            //string diskPath = "/var/www/projectdrop.se/data/unsorted/"; //Kod för produktionsmiljö, Linux
             string fullPath = diskPath + context.Session["Username"] + "/";
             UserFile file = new UserFile(context.Session["Username"].ToString(), formFile.FileName, fullPath, formFile.ContentLength);
 
@@ -34,7 +35,7 @@ public class Handler : IHttpHandler, IRequiresSessionState
             }
 
             // Utför felhantering på fil som står inför uppladdning
-            error.Upload(file);
+            error.Upload(file, (string)context.Session["Username"]);
             
             // Om inga fel upptäckts -> ladda upp
             if (error.State)
