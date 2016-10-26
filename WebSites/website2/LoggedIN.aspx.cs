@@ -75,7 +75,11 @@ public partial class LoggedIN : System.Web.UI.Page
         }
 
         //Mappen "Unsorted" som standard val
-        GetFolderFiles("0");
+        if(string.IsNullOrEmpty((string)Session["activeFolder"]))
+            GetFolderFiles("0");
+        else
+            GetFolderFiles(Session["activeFolder"].ToString().Split('_')[1]);
+
     }
 
     protected void GetFolderFiles(string selectedFolder)
@@ -93,6 +97,7 @@ public partial class LoggedIN : System.Web.UI.Page
         activeDiv = (HtmlGenericControl)folderSelectionExisting.FindControl("folder_" + selectedFolder);
         activeDiv.Attributes["class"] = "folderGraphicsActive";
         Session["activeFolder"] = "folder_" + selectedFolder;
+        Session["activeFolderName"] = _userFolders.Folders[folderKey].FolderName;
         fileSelection.Controls.Clear();
 
         HtmlTable fileTable = new HtmlTable();

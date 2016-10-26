@@ -19,10 +19,24 @@ public class Handler : IHttpHandler, IRequiresSessionState
         {
             SqlHandler updateDB = new SqlHandler();
             HttpPostedFile formFile = context.Request.Files[0];
-            string diskPath = "C:/uploads/unsorted/";
+
+            //Laddar upp i den valda mappen
+            string activeFolderName = "/unsorted/";
+            int activeFolderID = 0;
+            if (!string.IsNullOrEmpty((string)context.Session["activeFolderName"]))
+            {
+                activeFolderName = "/" + context.Session["activeFolderName"].ToString() + "/";
+                activeFolderID = Int32.Parse(context.Session["activeFolder"].ToString().Split('_')[1]);
+            }
+
+            string diskPath = "C:/uploads/";
             //string diskPath = "/var/www/projectdrop.se/data/unsorted/"; //Kod för produktionsmiljö, Linux
-            string fullPath = diskPath + context.Session["Username"] + "/";
+            string fullPath = diskPath + context.Session["Username"] + activeFolderName;
             UserFile file = new UserFile(context.Session["Username"].ToString(), formFile.FileName, fullPath, formFile.ContentLength);
+
+            /*
+            Mappen får inte rätt ID
+            */
 
             if (!Directory.Exists(diskPath))
             {
@@ -34,16 +48,21 @@ public class Handler : IHttpHandler, IRequiresSessionState
                 Directory.CreateDirectory(diskPath + context.Session["Username"]);
             }
 
+            if(!Directory.Exists(fullPath))
+            {
+                Directory.CreateDirectory(fullPath);
+            }
+
             // Utför felhantering på fil som står inför uppladdning
             error.Upload(file, (string)context.Session["Username"]);
-            
+
             // Om inga fel upptäckts -> ladda upp
             if (error.State)
             {
                 context.Session["message"] = null;
                 context.Session["color"] = null;
                 formFile.SaveAs(file.GetFilePath + file.GetFileName);
-                updateDB.FileUpload(file);
+                updateDB.FileUpload(file, activeFolderID);
             }
             // Skicka tillbaka felbeskrinvning till LoggedIN.aspx
             else

@@ -150,7 +150,7 @@ public class SqlHandler
         insert.ExecuteNonQuery();
     }
 
-    public void FileUpload(UserFile file)
+    public void FileUpload(UserFile file, int activeFolderID)
     {
         conn.Open();
         MySqlCommand insert = new MySqlCommand("INSERT INTO files(username, filename, filepath, filesize, folder_id) " +
@@ -159,7 +159,7 @@ public class SqlHandler
         insert.Parameters.AddWithValue("@filename", file.GetFileName);
         insert.Parameters.AddWithValue("@filpath", file.GetFilePath);
         insert.Parameters.AddWithValue("@filesize", file.GetSizeB);
-        insert.Parameters.AddWithValue("@folder_id", 0);
+        insert.Parameters.AddWithValue("@folder_id", activeFolderID);
         insert.ExecuteNonQuery();
         Commit();
         conn.Close();
