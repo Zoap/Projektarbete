@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" runat="server">
 <head runat="server">
     <title>Welcome to Project Drop</title>
-    <link rel="shortcut icon" href="server_inst_eyes_open.ico" />
+    <link rel="shortcut icon" href="Images/server_inst_eyes_open.ico" />
     <link rel="stylesheet" type="text/css" href="style.css" />
     <style type="text/css">
         .auto-style1 {
@@ -30,6 +30,7 @@
             <form id="loginRegisterForm" runat="server">
                 <div id="loginContentLeft">
                     <table class="loginTable">
+                        <asp:Panel ID="LoginPanel" runat="server" DefaultButton="btnLogin">
                         <tr>
                             <td colspan="2" class="loginTableTop">Logga in!</td>
                         </tr>
@@ -51,6 +52,7 @@
                                 <asp:Button ID="btnLogin" OnClick="btnLogin_Click" runat="server" Text="Login" CssClass="loginFormButton"/>
                             </td>
                         </tr>
+                        </asp:Panel>
                     </table>
                     <asp:Label ID="leftEventLabel" runat="server" Visible="false"/>
                 </div>
@@ -64,25 +66,33 @@
                         <tr>
                             <td class="auto-style2">Username:</td>
                             <td>
+                                <asp:Panel ID="RegistrationPanel1" runat="server" DefaultButton="btnRegistration">
                                 <asp:TextBox ID="registrationUsername" runat="server" placeholder="Username" BorderStyle="Solid"></asp:TextBox>
+                                </asp:Panel>
                             </td>
                         </tr>
                          <tr>
                             <td class="auto-style2">E-mail:</td>
                             <td>
+                                <asp:Panel ID="RegistrationPanel2" runat="server" DefaultButton="btnRegistration">
                                 <asp:TextBox ID="registrationEmail" runat="server" placeholder="E-mail" BorderStyle="Solid"></asp:TextBox>
+                                </asp:Panel>
                             </td>
                         </tr>
                         <tr>
                             <td class="auto-style2">Password:</td>
                             <td>
+                                <asp:Panel ID="RegistrationPanel3" runat="server" DefaultButton="btnRegistration">
                                 <asp:TextBox ID="registrationPassword" TextMode="password" runat="server" placeholder="Password" BorderStyle="Solid"></asp:TextBox>
+                                </asp:Panel>
                             </td>
                         </tr>
                         <tr>
                             <td class="auto-style2">Repeat:</td>
                             <td>
+                                <asp:Panel ID="RegistrationPanel4" runat="server" DefaultButton="btnRegistration">
                                 <asp:TextBox ID="registrationPasswordRepeat" TextMode="password" runat="server" placeholder="Password(Repeat)" BorderStyle="Solid"></asp:TextBox>
+                                </asp:Panel>
                             </td>
                         </tr>
                         <tr>
@@ -98,3 +108,11 @@
     </div>
 </body>
 </html>
+<footer class="footer">
+    <style>
+        a:link    {color:white; background-color:transparent; text-decoration:none}
+        a:visited {color:white; background-color:transparent; text-decoration:none}
+        a:hover {color:white; background-color:transparent; text-decoration:underline}
+    </style>
+    <p class="copyright"><strong><small>Copyright © 2016 ProjectDrop. Background Image By: <a href="http://www.designmastery.se">Björn Ed</a></small></strong></p>
+</footer>

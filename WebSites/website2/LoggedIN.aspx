@@ -5,6 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>Welcome to Project Drop</title>
+    <link rel="shortcut icon" href="Images/server_inst_eyes_open.ico" />
 	<link rel="stylesheet" type="text/css" href="style.css" />
 
     <!-- JavaScript -->
@@ -105,7 +106,6 @@
 		</div>
         <form id="formFileManager" runat="server">
         <div id="mainContent">
-            <asp:Button ID="LogOut" OnClick="btnLogOut_Click" runat="server" Text="Logout" CssClass="auto-style3"/>
             <div id="mainContentUpload">
 			    <p>För att ladda upp en fil</p>
                 <div id="dropzoneUpload">
@@ -130,12 +130,22 @@
                         </div>
                     </div>
                     <div id="fileSelection" runat="server">
-
                     </div>
                 </div>
+            </div>
+            <div>
+                <asp:Button ID="LogOut" OnClick="btnLogOut_Click" runat="server" Text="Logout" CssClass="auto-style3"/>
             </div>
         </div>
         </form>
 	</div>
 </body>
 </html>
+<footer class="footer">
+    <style>
+        a:link    {color:white; background-color:transparent; text-decoration:none}
+        a:visited {color:white; background-color:transparent; text-decoration:none}
+        a:hover {color:white; background-color:transparent; text-decoration:underline}
+    </style>
+    <p class="copyright"><strong><small>Copyright © 2016 ProjectDrop. Background Image By: <a href="http://www.designmastery.se">Björn Ed</a></small></strong></p>
+</footer>

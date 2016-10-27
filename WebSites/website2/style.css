@@ -4,9 +4,10 @@
 	padding: 0;
 }
 
-body
+body, html
 {
 	/*background-color: #ECECEC;*/
+    height: 100%;
 }
 
 #Wrapper
@@ -15,6 +16,7 @@ body
 	padding-top: 50px;
 	margin: auto 56px auto 636px;
 	width: 30%;
+    min-height: 85%;
 }
 #Header
 {
@@ -182,6 +184,24 @@ body
     font-size: 20px;
 }
 
+.footer {
+        position: absolute;
+        height: 96px;
+        width: 100%;
+        margin-bottom: 0px;
+        background-color: #333333;
+    }
+
+.copyright {
+        position: absolute;
+        width: 100%;
+        color: #fff;
+        line-height: 40px;
+        font-size: 0.7em;
+        text-align: center;
+        bottom:0;
+    }
+
 /* #####################
     DESIGN Registration
 ##################### */
@@ -206,10 +226,11 @@ body
 body 
 {
     font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
+    height: 100%;
     margin: 0;
     padding: 0;
 
-    background-image:url('server_inst_eyes_open.gif');
+    background-image:url('Images/server_inst_eyes_open.gif');
     background-repeat:no-repeat;
     background-attachment:scroll;
     background-position: 380px 170px;
