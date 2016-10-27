@@ -79,8 +79,7 @@ public class UserFolder
     /// </summary>
     public void Delete()
     {
-        //string diskPath = "/var/www/projectdrop.se/data/" + _userName + "/" + FolderName + "/"; //Kod för produktionsmiljö, Linux
-        string diskPath = "C:/uploads/" + _userName + "/" + FolderName + "/";
+        string diskPath = Text.Diskpath + _userName + "/" + FolderName + "/";
         if(Directory.Exists(diskPath))
         {
             Directory.Delete(diskPath);

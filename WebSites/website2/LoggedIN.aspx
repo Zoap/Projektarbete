@@ -4,7 +4,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>Upload</title>
+    <title>Welcome to Project Drop</title>
 	<link rel="stylesheet" type="text/css" href="style.css" />
 
     <!-- JavaScript -->
@@ -92,14 +92,20 @@
         });
     </script>
     <!--- /JavaScript -->
+    <style type="text/css">
+        .auto-style3 {
+            margin-left: 622px;
+        }
+    </style>
 </head>
 <body>
 	<div id="Wrapper">
 		<div id="Header">
-            <p>Logged IN!</p>
+            <p>Welcome!</p>
 		</div>
         <form id="formFileManager" runat="server">
         <div id="mainContent">
+            <asp:Button ID="LogOut" OnClick="btnLogOut_Click" runat="server" Text="Logout" CssClass="auto-style3"/>
             <div id="mainContentUpload">
 			    <p>För att ladda upp en fil</p>
                 <div id="dropzoneUpload">

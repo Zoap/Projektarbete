@@ -19,7 +19,7 @@ public partial class LoggedIN : System.Web.UI.Page
         {
             string test = (string)Session["Username"];
 
-            Server.Transfer("Default.aspx?SessionActive=false", false);
+            Response.Redirect("Default.aspx?SessionActive=false", false);
         }
         else
         {
@@ -216,8 +216,7 @@ public partial class LoggedIN : System.Web.UI.Page
         if (currFolder.FolderID != destFolder.FolderID)
         {
             string currLocation = fileToMove.GetFilePath;
-            //string destLocation = "/var/www/projectdrop.se/data/" + destFolder.FolderOwner + "/" + destFolder.FolderName + "/"; //Kod för produktionsmiljö, Linux
-            string destLocation = "C:/uploads/" + destFolder.FolderOwner + "/" + destFolder.FolderName + "/";
+            string destLocation = Text.Diskpath + destFolder.FolderOwner + "/" + destFolder.FolderName + "/";
             if (File.Exists(fileToMove.GetFilePath + fileToMove.GetFileName))
             {
                 File.Move(currLocation + fileToMove.GetFileName, destLocation + fileToMove.GetFileName);
@@ -315,8 +314,7 @@ public partial class LoggedIN : System.Web.UI.Page
 
     protected void btnCreateFolder_Click(object sender, EventArgs e)
     {
-        //string path = "/var/www/projectdrop.se/data/" + Session["Username"].ToString() + "/"; //Kod för produktionsmiljö, Linux
-        string path = "C:/uploads/" + Session["Username"].ToString() + "/";
+        string path = Text.Diskpath + Session["Username"].ToString() + "/";
         if (!Directory.Exists(path + createFolderName.Text))
         {
             UserFolder folder = new UserFolder(createFolderName.Text, Session["Username"].ToString(), true);
@@ -328,6 +326,12 @@ public partial class LoggedIN : System.Web.UI.Page
         }
         createFolderName.Text = string.Empty;
         getUserFiles(Session["Username"].ToString());
+    }
+
+    protected void btnLogOut_Click(object sender, EventArgs e)
+    {
+        Session.Abandon();
+        Response.Redirect("Default.aspx?Logout=true", true);
     }
 
     /// <summary>

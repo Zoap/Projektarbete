@@ -4,7 +4,7 @@
  
 <html xmlns="http://www.w3.org/1999/xhtml" runat="server">
 <head runat="server">
-    <title>Uploader</title>
+    <title>Welcome to Project Drop</title>
     <link rel="shortcut icon" href="server_inst_eyes_open.ico" />
     <link rel="stylesheet" type="text/css" href="style.css" />
     <style type="text/css">

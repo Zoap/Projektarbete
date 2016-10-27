@@ -28,9 +28,8 @@ public class Handler : IHttpHandler, IRequiresSessionState
                 activeFolderName = "/" + context.Session["activeFolderName"].ToString() + "/";
                 activeFolderID = Int32.Parse(context.Session["activeFolder"].ToString().Split('_')[1]);
             }
-
-            //string diskPath = "/var/www/projectdrop.se/data/"; //Kod för produktionsmiljö, Linux
-            string diskPath = "C:/uploads/";
+            
+            string diskPath = Text.Diskpath;
             string fullPath = diskPath + context.Session["Username"] + activeFolderName;
             UserFile file = new UserFile(context.Session["Username"].ToString(), formFile.FileName, fullPath, formFile.ContentLength);
 

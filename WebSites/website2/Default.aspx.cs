@@ -13,6 +13,10 @@ public partial class _Default : System.Web.UI.Page
             leftEventLabel.Text = "Sessionen är inte aktiv";
             leftEventLabel.Visible = true;
         }
+        else if (Request.QueryString["Logout"] == "true")
+        {
+            leftEventLabel.Visible = false;
+        }
 
         //Redirect om session finns
         //if(!string.IsNullOrEmpty(Session["Username"].ToString()))
@@ -49,7 +53,7 @@ public partial class _Default : System.Web.UI.Page
             //Skapar session & tömmer den gamla
             Session.Clear();
             Session["Username"] = userName;
-            Server.Transfer("LoggedIN.aspx", true);
+            Response.Redirect("LoggedIN.aspx", true);
         }
         else
         {

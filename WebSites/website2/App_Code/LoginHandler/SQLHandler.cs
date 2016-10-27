@@ -7,8 +7,7 @@ using MySql.Data.MySqlClient;
 public class SqlHandler
 {
     //Skapar en ny anslutning mot databasen
-    //private MySqlConnection conn = new MySqlConnection(@"server=localhost;userid=projektuser;password=yM6vsHoDVQj2EPNE#;database=projekt;");
-    private MySqlConnection conn = new MySqlConnection(@"server=localhost;userid=root;password=rootpassword;database=projekt;");
+    private MySqlConnection conn = new MySqlConnection(Text.Connection);
     private HashAndSalt crypto = new HashAndSalt();
 
     public SqlHandler()
