@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using MySql.Data.MySqlClient;
 
 /// <summary>
@@ -141,6 +138,35 @@ public class SqlHandler
         }
 
         return check;
+    }
+
+    public double CheckTotalSpaceUsed(string username)
+    {
+        double total;
+        string result;
+
+        conn.Open();
+        MySqlCommand select = new MySqlCommand("SELECT SUM(filesize) FROM files WHERE username = @username", conn);
+        select.Parameters.AddWithValue("@username", username);
+        result = Convert.ToString(select.ExecuteScalar());
+        conn.Close();
+        if (string.IsNullOrEmpty(result))
+        {
+            total = 0;
+        }
+        else
+        {
+            total = Convert.ToDouble(result);
+        }
+
+        if (!double.IsNaN(total) || !total.Equals(0))
+        {
+            return total / 1000000000;
+        }
+        else
+        {
+            return total;
+        } 
     }
 
     //Utför en commit mot databasen

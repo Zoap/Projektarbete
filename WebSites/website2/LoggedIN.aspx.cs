@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.UI.HtmlControls;
-using System.Web.Services;
 using System.IO;
 
 public partial class LoggedIN : System.Web.UI.Page
 {
     private FolderHandler _userFolders;
+    private ErrorHandling error = new ErrorHandling();
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -282,28 +280,37 @@ public partial class LoggedIN : System.Web.UI.Page
     /// <param name="selectedFolder">ID på mappen som ska raderas</param>
     private void deleteSelectedFolder(string selectedFolder)
     {
-        //Hämtar mappen
-        int activeFolderID = Int32.Parse(selectedFolder);
-        UserFolder folderToDelete = _userFolders.Folders[activeFolderID];
-        SqlHandler sqlHandler = new SqlHandler();
+        error.Delete(selectedFolder);
 
-        //Tar bort alla filer som tillhör mappen
-        foreach (UserFile file in folderToDelete.Files)
+        if (!error.State)
         {
-            sqlHandler.DeleteFile(Session["Username"].ToString(), activeFolderID, file.GetFileName);
-            file.Delete();
+            ClientScript.RegisterStartupScript(this.GetType(), "Otillåten Handling", "alert('" + "Unsorted kan inte raderas!" + "')", true);
         }
-        //Raderar mappen
-        sqlHandler.DeleteFolder(folderToDelete.FolderOwner, folderToDelete.FolderID, folderToDelete.FolderName);
-        folderToDelete.Delete();
-        _userFolders.Folders.Remove(activeFolderID);
+        else
+        {
+            //Hämtar mappen
+            int activeFolderID = Int32.Parse(selectedFolder);
+            UserFolder folderToDelete = _userFolders.Folders[activeFolderID];
+            SqlHandler sqlHandler = new SqlHandler();
 
-        //Ändrar den aktiva mappen om den borttagna var aktiv
-        int activeFolder = Int32.Parse(Session["activeFolder"].ToString().Split('_')[1]);
-        if (activeFolder == folderToDelete.FolderID)
-            Session["activeFolder"] = "folder_0";
-        //Uppdaterar mappträdet
-        populateFolders();
+            //Tar bort alla filer som tillhör mappen
+            foreach (UserFile file in folderToDelete.Files)
+            {
+                sqlHandler.DeleteFile(Session["Username"].ToString(), activeFolderID, file.GetFileName);
+                file.Delete();
+            }
+            //Raderar mappen
+            sqlHandler.DeleteFolder(folderToDelete.FolderOwner, folderToDelete.FolderID, folderToDelete.FolderName);
+            folderToDelete.Delete();
+            _userFolders.Folders.Remove(activeFolderID);
+
+            //Ändrar den aktiva mappen om den borttagna var aktiv
+            int activeFolder = Int32.Parse(Session["activeFolder"].ToString().Split('_')[1]);
+            if (activeFolder == folderToDelete.FolderID)
+                Session["activeFolder"] = "folder_0";
+            //Uppdaterar mappträdet
+            populateFolders();
+        }
     }
 
     protected void btnCreateFolder_Click(object sender, EventArgs e)

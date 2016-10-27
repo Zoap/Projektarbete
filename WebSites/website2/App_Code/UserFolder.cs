@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.IO;
 
 /// <summary>
@@ -81,9 +79,8 @@ public class UserFolder
     /// </summary>
     public void Delete()
     {
-        string diskPath = "C:/uploads/" + _userName + "/" + FolderName + "/";
-        //Tror jag gjorde Linux path rätt
         //string diskPath = "/var/www/projectdrop.se/data/" + _userName + "/" + FolderName + "/"; //Kod för produktionsmiljö, Linux
+        string diskPath = "C:/uploads/" + _userName + "/" + FolderName + "/";
         if(Directory.Exists(diskPath))
         {
             Directory.Delete(diskPath);

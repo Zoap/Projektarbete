@@ -4,7 +4,6 @@ using System;
 using System.Web;
 using System.Web.SessionState;
 using System.IO;
-using System.Web.UI;
 
 /// <summary>
 /// En handler som hanterar uppladdning av filer
@@ -23,14 +22,15 @@ public class Handler : IHttpHandler, IRequiresSessionState
             //Laddar upp i den valda mappen
             string activeFolderName = "/unsorted/";
             int activeFolderID = 0;
+
             if (!string.IsNullOrEmpty((string)context.Session["activeFolderName"]))
             {
                 activeFolderName = "/" + context.Session["activeFolderName"].ToString() + "/";
                 activeFolderID = Int32.Parse(context.Session["activeFolder"].ToString().Split('_')[1]);
             }
 
+            //string diskPath = "/var/www/projectdrop.se/data/"; //Kod för produktionsmiljö, Linux
             string diskPath = "C:/uploads/";
-            //string diskPath = "/var/www/projectdrop.se/data/unsorted/"; //Kod för produktionsmiljö, Linux
             string fullPath = diskPath + context.Session["Username"] + activeFolderName;
             UserFile file = new UserFile(context.Session["Username"].ToString(), formFile.FileName, fullPath, formFile.ContentLength);
 

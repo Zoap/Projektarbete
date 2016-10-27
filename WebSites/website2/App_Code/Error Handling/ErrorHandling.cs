@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 /// <summary>
 /// Summary description for ErrorHandling
@@ -211,7 +203,7 @@ public class ErrorHandling
 
     public void Upload(UserFile file, string username)
     {
-        if (file.GetSizeB > 200000)
+        if (file.GetSizeMB > 200)
         {
             _message = "*Filen är för stor";
             _color = red;
@@ -221,10 +213,27 @@ public class ErrorHandling
             _message = "*Det existerar redan en fil med det namnet";
             _color = red;
         }
-        else if (!Match(file.GetFileName, @"(?i)(\.)(pdf|jpeg|jpg|png)"))
+        else if (!Match(file.GetFileName, @"(?i)(\.)(pdf|jpeg|jpg|png|zip|rar|7z)"))
         {
             _message = "*Filtypen är förbjuden";
             _color = red;
+        }
+        else if (sql.CheckTotalSpaceUsed(username) > 1)
+        {
+            _message = "*Du har överskridit din totala lagringskvot på 1GB";
+            _color = red;
+        }
+        else
+        {
+            _state = true;
+        }
+    }
+
+    public void Delete(string folderID)
+    {
+        if (folderID.Equals("0"))
+        {
+            
         }
         else
         {
