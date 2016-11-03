@@ -12,6 +12,9 @@ public class ErrorHandling
 
     //styr vilken css klass label skall anta
     private string _color = string.Empty;
+    /// <summary>
+    /// Gives the error labels correct presentation
+    /// </summary>
     public string Color
     {
         get
@@ -22,6 +25,9 @@ public class ErrorHandling
 
 
     private string _message = string.Empty;
+    /// <summary>
+    /// Sets the error message
+    /// </summary>
     public string Message
     {
         get
@@ -32,6 +38,9 @@ public class ErrorHandling
 
     //Används som variabel utanför ErrorHandling för att kolla om fel upptäckts
     private bool _state = false;
+    /// <summary>
+    /// Controls operations after error control
+    /// </summary>
     public bool State
     {
         get
@@ -45,6 +54,11 @@ public class ErrorHandling
     }
 
     //Kollar username efter andra tecken än 0-9, A-Z, a-z
+    /// <summary>
+    /// Checks the entered username for the set requirements
+    /// </summary>
+    /// <param name="username"></param>
+    /// <returns></returns>
     private bool CheckUsername(string username)
     {
         bool check = true;
@@ -61,11 +75,22 @@ public class ErrorHandling
         return check;
     }
 
+    /// <summary>
+    /// Simplifies the Regex method slightly
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="regex"></param>
+    /// <returns></returns>
     private bool Match(string source, string regex)
     {
         return Regex.IsMatch(source, regex);
     }
 
+    /// <summary>
+    /// Checks if the entered email address is a valid email address
+    /// </summary>
+    /// <param name="email"></param>
+    /// <returns></returns>
     private bool CheckEmail(string email)
     {
         bool check;
@@ -82,6 +107,11 @@ public class ErrorHandling
         return check;
     }
 
+    /// <summary>
+    /// Checks the password entered for the set requirements
+    /// </summary>
+    /// <param name="password"></param>
+    /// <returns></returns>
     private bool CheckPassword(string password)
     {
         bool check = true;
@@ -127,6 +157,13 @@ public class ErrorHandling
     }
 
     //Felhantering i registreringsfasen
+    /// <summary>
+    /// Performs error detection on the registration form
+    /// </summary>
+    /// <param name="username"></param>
+    /// <param name="email"></param>
+    /// <param name="password"></param>
+    /// <param name="passwordRepeat"></param>
     public void Registration(string username, string email, string password, string passwordRepeat)
     {
         //Lite felhantering (borde kollas efter specifika chars osv.) orkarde inte regex
@@ -188,6 +225,11 @@ public class ErrorHandling
     }
 
     //Felhantering i login fasen
+    /// <summary>
+    /// Checks if username and password exists in the database
+    /// </summary>
+    /// <param name="username"></param>
+    /// <param name="password"></param>
     public void Login(string username, string password)
     {
         if (sql.Login(username, password))
@@ -200,7 +242,11 @@ public class ErrorHandling
             _color = red;
         }
     }
-
+    /// <summary>
+    /// Performs error detection on the file pending upload
+    /// </summary>
+    /// <param name="file"></param>
+    /// <param name="username"></param>
     public void Upload(UserFile file, string username)
     {
         if (file.GetSizeMB > 200)
@@ -228,15 +274,18 @@ public class ErrorHandling
             _state = true;
         }
     }
-
+    /// <summary>
+    /// Determines if the folder that is up for deletion is the default folder
+    /// </summary>
+    /// <param name="folderID"></param>
     public void Delete(string folderID)
     {
         if (folderID.Equals("0"))
         {
-            
+            _message = "Unsorted kan inte raderas!";
         }
         else
-        {
+        { 
             _state = true;
         }
     }

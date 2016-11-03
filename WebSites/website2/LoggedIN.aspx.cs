@@ -283,7 +283,7 @@ public partial class LoggedIN : System.Web.UI.Page
 
         if (!error.State)
         {
-            ClientScript.RegisterStartupScript(this.GetType(), "Otillåten Handling", "alert('" + "Unsorted kan inte raderas!" + "')", true);
+            ClientScript.RegisterStartupScript(this.GetType(), "Otillåten Handling", "alert('" + error.Message + "')", true);
         }
         else
         {

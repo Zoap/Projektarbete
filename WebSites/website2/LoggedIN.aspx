@@ -96,6 +96,17 @@
     <style type="text/css">
         .auto-style3 {
             margin-left: 622px;
+            cursor: pointer;
+            cursor: hand;
+        }
+        img:hover {
+            cursor: pointer;
+            cursor: hand;
+        }
+        .auto-style4 {
+            margin-left: 0;
+            cursor: pointer;
+            cursor: hand;
         }
     </style>
 </head>
@@ -107,7 +118,7 @@
         <form id="formFileManager" runat="server">
         <div id="mainContent">
             <div id="mainContentUpload">
-			    <p>För att ladda upp en fil</p>
+			    <p>Drag and drop a file to upload.</p>
                 <div id="dropzoneUpload">
                     <center>
                         <input type="button" id="btnUpload" value="Upload file" />
@@ -117,7 +128,7 @@
                 <asp:Label ID="leftEventLabel" runat="server" Visible="false"/>
             </div>
             <div id="mainContentMyFiles">
-                <p>Upladdade filer</p>
+                <p>Your files and folder.</p>
                 <div id="fileBrowser">
                     <div id="folderSelection">
                         <p>Existing folders:</p>
@@ -126,7 +137,7 @@
                         <div id="mainContentCreateFolder">
                             <p>Create a folder:</p>
                             <asp:TextBox ID="createFolderName" runat="server" placeholder="Name" BorderStyle="Solid" Width="120"></asp:TextBox>
-                            <asp:Button ID="btnCreateFolder" OnClick="btnCreateFolder_Click" runat="server" Text="Create" />
+                            <asp:Button ID="btnCreateFolder" OnClick="btnCreateFolder_Click" runat="server" Text="Create" CssClass="auto-style4" />
                         </div>
                     </div>
                     <div id="fileSelection" runat="server">
@@ -134,7 +145,7 @@
                 </div>
             </div>
             <div>
-                <asp:Button ID="LogOut" OnClick="btnLogOut_Click" runat="server" Text="Logout" CssClass="auto-style3"/>
+                <asp:Button ID="LogOut" OnClick="btnLogOut_Click" runat="server" Text="Logout" CssClass="auto-style3" />
             </div>
         </div>
         </form>

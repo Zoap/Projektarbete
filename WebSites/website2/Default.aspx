@@ -24,15 +24,15 @@
 <body>
     <div id="Wrapper">
         <div id="Header">
-            <p>Uploader</p>
+            <p>Project Drop</p>
         </div>
         <div id="loginContent">
             <form id="loginRegisterForm" runat="server">
                 <div id="loginContentLeft">
+                    <asp:Panel ID="LoginPanel" runat="server" DefaultButton="btnLogin">
                     <table class="loginTable">
-                        <asp:Panel ID="LoginPanel" runat="server" DefaultButton="btnLogin">
                         <tr>
-                            <td colspan="2" class="loginTableTop">Logga in!</td>
+                            <td colspan="2" class="loginTableTop">Sign In</td>
                         </tr>
                         <tr class="spacingFix"><td colspan="2"></td></tr>
                         <tr>
@@ -52,55 +52,49 @@
                                 <asp:Button ID="btnLogin" OnClick="btnLogin_Click" runat="server" Text="Login" CssClass="loginFormButton"/>
                             </td>
                         </tr>
-                        </asp:Panel>
                     </table>
+                    </asp:Panel>
                     <asp:Label ID="leftEventLabel" runat="server" Visible="false"/>
                 </div>
  
                 <div id="loginContentRight">
+                    <asp:Panel ID="RegistrationPanel1" runat="server" DefaultButton="btnRegistration">
                     <table class="registrationTable">
                         <tr>
-                            <td colspan="2" class="registrationTableTop">Registrera dig!</td>
+                            <td colspan="2" class="registrationTableTop">Register</td>
                         </tr>
                         <tr class="spacingFix"><td colspan="2"></td></tr>
                         <tr>
                             <td class="auto-style2">Username:</td>
                             <td>
-                                <asp:Panel ID="RegistrationPanel1" runat="server" DefaultButton="btnRegistration">
                                 <asp:TextBox ID="registrationUsername" runat="server" placeholder="Username" BorderStyle="Solid"></asp:TextBox>
-                                </asp:Panel>
                             </td>
                         </tr>
                          <tr>
                             <td class="auto-style2">E-mail:</td>
                             <td>
-                                <asp:Panel ID="RegistrationPanel2" runat="server" DefaultButton="btnRegistration">
                                 <asp:TextBox ID="registrationEmail" runat="server" placeholder="E-mail" BorderStyle="Solid"></asp:TextBox>
-                                </asp:Panel>
                             </td>
                         </tr>
                         <tr>
                             <td class="auto-style2">Password:</td>
                             <td>
-                                <asp:Panel ID="RegistrationPanel3" runat="server" DefaultButton="btnRegistration">
                                 <asp:TextBox ID="registrationPassword" TextMode="password" runat="server" placeholder="Password" BorderStyle="Solid"></asp:TextBox>
-                                </asp:Panel>
                             </td>
                         </tr>
                         <tr>
                             <td class="auto-style2">Repeat:</td>
                             <td>
-                                <asp:Panel ID="RegistrationPanel4" runat="server" DefaultButton="btnRegistration">
                                 <asp:TextBox ID="registrationPasswordRepeat" TextMode="password" runat="server" placeholder="Password(Repeat)" BorderStyle="Solid"></asp:TextBox>
-                                </asp:Panel>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="2" align="right">
-                                <asp:Button ID="btnRegistration" OnClick="btnRegistration_Click" runat="server" Text="Registrera" CssClass="registrationFormButton"/>
+                                <asp:Button ID="btnRegistration" OnClick="btnRegistration_Click" runat="server" Text="Register" CssClass="registrationFormButton"/>
                             </td>
                         </tr>
                     </table>
+                    </asp:Panel>
                     <asp:Label ID="rightEventLabel" runat="server" CssClass="rightEventLabel" Visible="false"/>
                 </div>
             </form>
