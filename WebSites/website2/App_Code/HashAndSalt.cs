@@ -13,7 +13,7 @@ public class HashAndSalt
 
     public string Hash(string password, string datetime = null)
     {
-        MD5 md5 = System.Security.Cryptography.MD5.Create();
+        MD5 md5 = MD5.Create();
 
         if (string.IsNullOrEmpty(datetime))
         {
@@ -24,6 +24,7 @@ public class HashAndSalt
         string salted = password + random + datetime;
         byte[] salt = Encoding.ASCII.GetBytes(salted);
         byte[] hash = md5.ComputeHash(salt);
+        
 
         StringBuilder hashedPassword = new StringBuilder();
 

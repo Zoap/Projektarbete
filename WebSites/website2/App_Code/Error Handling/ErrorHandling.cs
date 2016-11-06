@@ -95,6 +95,7 @@ public class ErrorHandling
     {
         bool check;
 
+        //Regex kommer från http://www.rhyous.com/2010/06/15/regular-expressions-in-cincluding-a-new-comprehensive-email-pattern/
         if (Match(email, @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*" + "@" + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$"))
         {
             check = true;
@@ -259,12 +260,12 @@ public class ErrorHandling
             _message = "*Det existerar redan en fil med det namnet";
             _color = red;
         }
-        else if (!Match(file.GetFileName, @"(?i)(\.)(pdf|jpeg|jpg|png|zip|rar|7z)"))
+        else if (!Match(file.GetFileName, @"(?i)(\.)(pdf|txt|jpeg|jpg|png|zip|rar|7z)"))
         {
             _message = "*Filtypen är förbjuden";
             _color = red;
         }
-        else if (sql.CheckTotalSpaceUsed(username) > 1)
+        else if ((sql.CheckTotalSpaceUsed(username) + (file.GetSizeMB / 1000)) > 1)
         {
             _message = "*Du har överskridit din totala lagringskvot på 1GB";
             _color = red;

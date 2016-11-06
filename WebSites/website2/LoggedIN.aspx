@@ -128,7 +128,7 @@
                 <asp:Label ID="leftEventLabel" runat="server" Visible="false"/>
             </div>
             <div id="mainContentMyFiles">
-                <p>Your files and folder.</p>
+                <p>Your files and folders.</p>
                 <div id="fileBrowser">
                     <div id="folderSelection">
                         <p>Existing folders:</p>
