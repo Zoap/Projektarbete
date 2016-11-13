@@ -12,7 +12,6 @@ public class UserFolder
     private string _userName, _folderName;
     private int _folderID;
 
-    
     /// <summary>
     /// Skapar en instans av mappen och splittar SQLData in i korrekta variabler.
     /// Kallar sedan på metoden populateFiles för att hämta filerna som tillhör mappen.

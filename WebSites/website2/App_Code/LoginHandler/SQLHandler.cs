@@ -8,7 +8,6 @@ public class SqlHandler
 {
     //Skapar en ny anslutning mot databasen
     private MySqlConnection conn = new MySqlConnection(Text.Connection);
-    private HashAndSalt crypto = new HashAndSalt();
 
     public SqlHandler()
     {
@@ -24,18 +23,18 @@ public class SqlHandler
     }
 
     //Kollar user table i databasen efter angivet användarnamn och lösenord
-    public bool Login(string username, string password)
+    public bool Login(User user)
     {
         bool check;
         int count;
+        string password;
+        string username = user.Username;
 
         conn.Open();
-        string date = GetDate(username);
-        string hashedPassword = crypto.Hash(password, date);
-
+        password = user.Login(GetDate(username));
         MySqlCommand select = new MySqlCommand("SELECT COUNT(*) FROM user WHERE username = @username AND password = @password", conn);
         select.Parameters.AddWithValue("@username", username);
-        select.Parameters.AddWithValue("@password", hashedPassword);
+        select.Parameters.AddWithValue("@password", password);
         count = Convert.ToInt32(select.ExecuteScalar());
         conn.Close();
 
@@ -52,16 +51,19 @@ public class SqlHandler
     }
 
     //Gör en insert mot user table i databasen
-    public void Register(string username, string email, string password)
+    public void Register(User user)
     {
-        conn.Open();
-        string date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        string hashedPassword = crypto.Hash(password, date);
+        string username = user.Username;
+        string password = user.Password;
+        string email = user.Email;
+        string date = user.Createtime;
 
-        MySqlCommand insert = new MySqlCommand("INSERT INTO user(username, email, password) VALUES(@username, @email, @password)", conn);
+        conn.Open();
+        MySqlCommand insert = new MySqlCommand("INSERT INTO user(username, email, password, create_time) VALUES(@username, @email, @password, @create_time)", conn);
         insert.Parameters.AddWithValue("@username", username);
-        insert.Parameters.AddWithValue("@password", hashedPassword);
+        insert.Parameters.AddWithValue("@password", password);
         insert.Parameters.AddWithValue("@email", email);
+        insert.Parameters.AddWithValue("@create_time", date);
         insert.ExecuteNonQuery();
         Commit();
         conn.Close();
@@ -149,6 +151,7 @@ public class SqlHandler
         select.Parameters.AddWithValue("@username", username);
         result = Convert.ToString(select.ExecuteScalar());
         conn.Close();
+
         if (string.IsNullOrEmpty(result))
         {
             total = 0;

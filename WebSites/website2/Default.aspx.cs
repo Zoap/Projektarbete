@@ -27,10 +27,9 @@ public partial class _Default : System.Web.UI.Page
 
     protected void btnLogin_Click(object sender, EventArgs e)
     {
-        string username = loginUsername.Text;
-        string password = loginPassword.Text;
+        User login_user = new User(loginUsername.Text, loginPassword.Text);
 
-        HandleLogin(username, password);
+        HandleLogin(login_user);
     }
 
     protected void btnRegistration_Click(object sender, EventArgs e)
@@ -41,18 +40,20 @@ public partial class _Default : System.Web.UI.Page
         string password = registrationPassword.Text;
         string passwordRepeat = registrationPasswordRepeat.Text;
 
-        HandleRegistration(username, email, password, passwordRepeat);
+        User new_user = new User(username, password, email);
+        
+        HandleRegistration(new_user, password, passwordRepeat);
     }
 
-    private void HandleLogin(string userName, string password)
+    private void HandleLogin(User user)
     {
-        error.Login(userName, password);
+        error.Login(user);
         
         if (error.State)
         {
             //Skapar session & tömmer den gamla
             Session.Clear();
-            Session["Username"] = userName;
+            Session["Username"] = user.Username;
             Response.Redirect("LoggedIN.aspx", true);
         }
         else
@@ -65,13 +66,13 @@ public partial class _Default : System.Web.UI.Page
         }
     }
 
-    private void HandleRegistration(string userName, string email, string password, string passwordRepeat)
+    private void HandleRegistration(User user, string password, string passwordRepeat)
     {
-        error.Registration(userName, email,  password, passwordRepeat);
+        error.Registration(user, password, passwordRepeat);
 
         if (error.State)
         {
-            sql.Register(userName, email, password);
+            sql.Register(user);
         }
 
         loginUsername.Text = string.Empty;

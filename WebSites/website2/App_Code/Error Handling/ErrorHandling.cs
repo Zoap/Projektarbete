@@ -165,8 +165,11 @@ public class ErrorHandling
     /// <param name="email"></param>
     /// <param name="password"></param>
     /// <param name="passwordRepeat"></param>
-    public void Registration(string username, string email, string password, string passwordRepeat)
+    public void Registration(User user,string password, string passwordRepeat)
     {
+        string username = user.Username;
+        string email = user.Email;
+
         //Lite felhantering (borde kollas efter specifika chars osv.) orkarde inte regex
         if (!string.IsNullOrEmpty(username))
         {
@@ -231,9 +234,9 @@ public class ErrorHandling
     /// </summary>
     /// <param name="username"></param>
     /// <param name="password"></param>
-    public void Login(string username, string password)
+    public void Login(User user)
     {
-        if (sql.Login(username, password))
+        if (sql.Login(user))
         {
             _state = true;
         }
